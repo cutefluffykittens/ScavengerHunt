@@ -6,6 +6,7 @@ class GameMaker:
   def login(self, name, password):
     if (self.database.gameMakerCred = {name, password}):
       self.loggedin = true
+      
   //TODO Implement checkStatus
   def checkStatus(self):
   //TODO Implement logout
