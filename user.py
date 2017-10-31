@@ -3,7 +3,7 @@ class User:
         pass
     def login(username,password):
         pass   
-    def logout(team):
+    def logout(self):
         pass
-    def displayMenu():
+    def displayMenu(self):
         pass
