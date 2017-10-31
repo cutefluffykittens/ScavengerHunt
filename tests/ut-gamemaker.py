@@ -36,3 +36,13 @@ class TestMakerLogin(unittest.TestCase):
       self.maker1.logout()
       self.assertEquals(self.database.curUser, null, "Current user is not null after logging out")
      
+suite = unittest.TestSuite()
+suite.addTest(unittest.makeSuite(TestMakerLogin))
+suite.addTest(unittest.makeSuite(TestMakerCheckStatus))
+suite.addTest(unittest.makeSuite(TestMakerLogout))
+
+runner = unittest.TextTestRunner()
+res=runner.run(suite)
+print(res)
+print("*"*20)
+for i in res.failures: print(i[1])
