@@ -1,6 +1,6 @@
 import unittest
 import database
-import escavange
+import EScavange
 import gameMaker
 
 class TestDatabaseCreation(unittest.TestCase):
