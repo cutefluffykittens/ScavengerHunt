@@ -39,20 +39,23 @@ class TestMakerLogin(unittest.TestCase):
     self.database = database.Database()
     self.maker1 = gamemaker.GameMaker()
     
-  def test_SingleTeam(self)
+  def test_EmptyTeam(self):
+    self.assertEquals(self.maker1.checkStatus(), "No teams!", "CheckStatus did not return proper response to empty team list")
+    
+  def test_SingleTeam(self):
     self.team1 = team.Team("Team1")
     self.assertEquals(self.maker1.checkStatus(), "Team1", "Status incorrect for single team existing")
   
-  def test_TwoTeams(self)
+  def test_MultipleTeams(self):
     self.team1 = team.Team("Team1")
     self.team2 = team.Team("team2")
-    self.assertEquals(self.maker1.checkStatus(), "Team1, team2", "Status incorrect for two teams existing")
-    
-  def test_ThreeTeams(self)
-    self.team1 = team.Team("Team1")
-    self.team2 = team.Team("team2")
-    self.team3 = team.Team("thirdteam")
-    self.assertEquals("self.maker1.checkStatus(), "Team1, team2, thirdteam", "Status incorrect for three teams existing")
+    string = self.maker1.checkStatus()
+    self.assertEquals("Team1" in string, true, "Cannot find first entry in two team list")
+    string.replace("Team1", "")
+    self.assertEquals("team2" in string, true, "Cannot find second entry in two team list")
+    string.replace("team2", "")
+    string.replace(" ", "")
+    self.assertEquals(string, "", "List has some other entries besides what was given")
      
 suite = unittest.TestSuite()
 suite.addTest(unittest.makeSuite(TestMakerLogin))
