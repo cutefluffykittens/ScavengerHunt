@@ -1,6 +1,8 @@
 import unittest
 import gamemaker
 import database
+import team
+import user
 
 class TestMakerLogin(unittest.TestCase):
   def setUp(self):
@@ -37,11 +39,25 @@ class TestMakerLogin(unittest.TestCase):
     self.database = database.Database()
     self.maker1 = gamemaker.GameMaker()
     
-  def 
+  def test_SingleTeam(self)
+    self.team1 = team.Team("Team1")
+    self.assertEquals(self.maker1.checkStatus(), "Team1", "Status incorrect for single team existing")
+  
+  def test_TwoTeams(self)
+    self.team1 = team.Team("Team1")
+    self.team2 = team.Team("team2")
+    self.assertEquals(self.maker1.checkStatus(), "Team1, team2", "Status incorrect for two teams existing")
+    
+  def test_ThreeTeams(self)
+    self.team1 = team.Team("Team1")
+    self.team2 = team.Team("team2")
+    self.team3 = team.Team("thirdteam")
+    self.assertEquals("self.maker1.checkStatus(), "Team1, team2, thirdteam", "Status incorrect for three teams existing")
      
 suite = unittest.TestSuite()
 suite.addTest(unittest.makeSuite(TestMakerLogin))
 suite.addTest(unittest.makeSuite(TestMakerLogout))
+suite.addTest(unittest.makeSuite(TestMakerCheckStatus))
 
 runner = unittest.TextTestRunner()
 res=runner.run(suite)
