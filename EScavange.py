@@ -1,11 +1,18 @@
-import database.py
-import gamemaker.py
+import database
+import gamemaker
 
 class main():
-  
+  user = ""
+  password = ""
+  cmd = ""
+  response = ""
+
   def __init__(self):
     self.db = database.Database()
-    self.gameMaker = gameMaker.GameMaker()
+    self.gameMaker = gamemaker.GameMaker()
   
   def login(self):
+    pass
+
+
     
