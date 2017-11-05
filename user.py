@@ -2,7 +2,7 @@ import abc
 
 class User(abc.ABC):
     @abc.abstractmethod
-    def login(username,password):
+    def login(self, username, password):
         pass
     @abc.abstractmethod
     def logout(self):
