@@ -5,57 +5,54 @@ import team
 import user
 
 class TestMakerLogin(unittest.TestCase):
-  def setUp(self):
+  def set_up(self):
     self.database = database.Database()
     self.maker1 = gamemaker.GameMaker()
   
-  def test_BadLogin(self):
+  def test_bad_login(self):
      self.assertEquals(self.maker1.login("Notvalidusername","Notvalidpassword"), "Bad username or password!", "Bad response to invalid login")
-     self.assertEquals(self.database.curUser, null, "Current user is not null") //Make sure null is starting value!
-  def test_GoodLogin(self):
+     self.assertEquals(self.database.curUser, None, "Current user is not null")
+  def test_good_login(self):
      self.assertEquals(self.maker1.login("maker","password"), "User maker logged in!", "Maker should have logged in")
-     self.assertEquals(self.database.curUser, "maker", "Current user should be maker")
-  def test_GoodLoginWhileLoggedIn(self):
+     self.assertEquals(self.database.curUser.name, "maker", "Current user should be maker")
+  def test_good_login_while_logged_in(self):
     self.maker1.login("maker","password")
-     self.assertEquals(self.maker1.login("maker","password"), "Maker already logged in!", "Bad response to second login attempt")
+    self.assertEquals(self.maker1.login("maker","password"), "Maker already logged in!", "Bad response to second login attempt")
       
   class TestMakerLogout(unittest.TestCase):
-    def setUp(self):
+    def set_up(self):
       self.database = database.Database()
       self.maker1 = gamemaker.GameMaker()
     
-    def test_LogoutWhileNotLoggedIn(self):
+    def test_logout_while_not_logged_in(self):
       self.assertEquals(self.maker1.logout(), "maker is not logged in!", "Bad response to maker logging out while not logged in")
-    def test_GoodLogout(self):
+    def test_good_logout(self):
       self.maker1.login()
       self.assertEquals(self.maker1.logout(), "maker logged out!", "Bad response to maker logging out correctly")
-    def test_CurrentUserIsNotMaker(self):
+    def test_current_user_is_not_maker(self):
       self.maker1.login("maker","password")
       self.maker1.logout("maker")
-      self.assertEquals(self.database.curUser, null, "Current user is not null after logging out")
+      self.assertEquals(self.database.curUser, None, "Current user is not null after logging out")
       
  class TestMakerCheckStatus(unittest.TestCase):
-  def setUp(self):
+  def set_up(self):
     self.database = database.Database()
     self.maker1 = gamemaker.GameMaker()
     
-  def test_EmptyTeam(self):
-    self.assertEquals(self.maker1.checkStatus(), "No teams!", "CheckStatus did not return proper response to empty team list")
+  def test_empty_team(self):
+    self.assertEquals(self.maker1.check_status(), "No teams!", "CheckStatus did not return proper response to empty team list")
     
-  def test_SingleTeam(self):
+  def test_single_team(self):
     self.team1 = team.Team("Team1")
-    self.assertEquals(self.maker1.checkStatus(), "Team1", "Status incorrect for single team existing")
+    dict = self.maker1.check_status()
+    self.assertEquals("Team1" in dict, True, "Status incorrect for single team existing")
   
-  def test_MultipleTeams(self):
+  def test_multiple_teams(self):
     self.team1 = team.Team("Team1")
     self.team2 = team.Team("team2")
-    string = self.maker1.checkStatus()
-    self.assertEquals("Team1" in string, true, "Cannot find first entry in two team list")
-    string.replace("Team1", "")
-    self.assertEquals("team2" in string, true, "Cannot find second entry in two team list")
-    string.replace("team2", "")
-    string.replace(" ", "")
-    self.assertEquals(string, "", "List has some other entries besides what was given")
+    dict = self.maker1.check_status()
+    self.assertEquals("Team1" in dict, True, "Cannot find first entry in two team list")
+    self.assertEquals("team2" in dict, True, "Cannot find second entry in two team list")
      
 suite = unittest.TestSuite()
 suite.addTest(unittest.makeSuite(TestMakerLogin))
