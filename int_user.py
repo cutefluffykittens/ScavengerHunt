@@ -1,12 +1,12 @@
-from abc import ABC, abstractmethod
+import abc
 
-class User(ABC):
-    @abstractmethod
+class User(abc.ABC):
+    @abc.abstractmethod
     def login(self, database, username, password):
         pass
-    @abstractmethod
+    @abc.abstractmethod
     def logout(self, database):
         pass
-    @abstractmethod
+    @abc.abstractmethod
     def display_menu(self):
         pass

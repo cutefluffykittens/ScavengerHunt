@@ -1,13 +1,10 @@
 import int_user
 
 class Team(int_user.User):
-    def __init__(self,name,username,password):
-        self.name = name
+    def __init__(self,username,password):
         self.username = username
         self.password = password
-    def set_team_name(self,new_name):
-        self.name = new_name
-        return "Team name changed to " + new_name
+        #self.current_landmark = 0;
     def set_team_username(self,new_username):
         self.username = new_username
         return "Team username changed to " + new_username
@@ -15,17 +12,16 @@ class Team(int_user.User):
         self.password = new_password
         return "Team password changed to " + new_password
     def login(self,database,username,password):
-        result = "Unable to log in"
         if database.get_current_user() != None:
-            return result
+            return False
         if username == self.username and password == self.password:
             database.set_current_user(self)
-            result = self.name + " logged in"
-        return result
+            return True
+        return False
     def logout(self,database):
-        result = "Unable to log out"
+        if database.get_current_user() != self:
+            return False
         database.set_current_user(None)
-        result = self.name + " logged out"
-        return result
+        return True
     def display_menu(self):
-        pass
+        return "Which would you like to do?\nlog out\ndisplay status"
