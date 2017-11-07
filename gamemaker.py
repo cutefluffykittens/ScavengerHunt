@@ -16,7 +16,7 @@ class GameMaker:
         string = ''
         teams = self.database.get_teams()
         for team in teams:
-            string += '' + team.username #+ ' is at ' + team.landmark + ' with ' + team.penalties + ' penalties\n'
+            string += '' + team.username + '\n' #+ ' is at ' + team.landmark + ' with ' + team.penalties + ' penalties\n'
         if string == '':
             string = 'No teams!'
         return string
