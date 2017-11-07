@@ -7,18 +7,18 @@ class GameMaker:
         current_user = self.database.get_current_user()
         maker_cred = self.database.get_game_maker_cred()
         if current_user == None:
-            if name == "maker" and maker_cred["maker"] == password:
+            if maker_cred["maker"] == "maker" and maker_cred["password"] == password:
                 self.database.set_current_user(self)
                 returnValue = True
         return returnValue
 
     def check_status(self):
-        dict = self.database.teams.keys()
-        if None in dict:
+        dict = self.database.teams.keys():
+        if len(dict) == 0:
             return "No teams!"
         else:
-            return dict
-
+            return ' '.join(dict)
+        
     def logout(self):
         returnValue = False
         current_user = self.database.get_current_user()
