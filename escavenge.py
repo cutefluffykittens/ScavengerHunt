@@ -14,7 +14,7 @@ class Escavenge():
             "display status": self.game_maker.display_status()
         }
 
-        self.user = {
+        self.team = {
             "logout": team.logout(database),
             "display status": team.display_status()
         }
@@ -37,11 +37,11 @@ class Escavenge():
             self.maker[cmd]()
         self.main()
 
-    def user_cmd(self):
+    def team_cmd(self):
         cmd = None
         while(cmd is not "logout"):
             cmd = input(team.display_menu())
-            self.user[cmd]()
+            self.team[cmd]()
         self.main()
 
     def main(self):
@@ -60,7 +60,7 @@ class Escavenge():
 
                 else:
                     print("Log in as " + database.get_current_user() + " successful!")
-                    self.user_cmd()
+                    self.team_cmd()
             else:
                 print "Invalid username and password. Please try again!"
 
