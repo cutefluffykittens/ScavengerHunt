@@ -1,7 +1,7 @@
 import database
 import gamemaker
 
-class main():
+class Main():
   user = ""
   password = ""
   cmd = ""
