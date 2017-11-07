@@ -31,7 +31,7 @@ class TestMakerLogin(unittest.TestCase):
       self.assertEquals(self.maker1.logout(), True, "Bad response to maker logging out correctly")
     def test_current_user_is_not_maker(self):
       self.maker1.login("maker","password")
-      self.maker1.logout("maker")
+      self.maker1.logout()
       self.assertEquals(self.database.get_current_user(), None, "Current user is not null after logging out")
       
  class TestMakerCheckStatus(unittest.TestCase):
@@ -43,16 +43,15 @@ class TestMakerLogin(unittest.TestCase):
     self.assertEquals(self.maker1.check_status(), "No teams!", "CheckStatus did not return proper response to empty team list")
     
   def test_single_team(self):
-    self.team1 = team.Team("Team1")
+    self.team1 = team.Team("Team1", "Team1", "password", )
     dict = self.maker1.check_status()
-    self.assertEquals("Team1" in dict, True, "Status incorrect for single team existing")
+    self.assertEquals(dict, "Team1", "Status incorrect for single team existing")
   
   def test_multiple_teams(self):
     self.team1 = team.Team("Team1")
     self.team2 = team.Team("team2")
     dict = self.maker1.check_status()
-    self.assertEquals("Team1" in dict, True, "Cannot find first entry in two team list")
-    self.assertEquals("team2" in dict, True, "Cannot find second entry in two team list")
+    self.assertEquals(dict, "Team1 team2", "Cannot find entries in two team list")
      
 suite = unittest.TestSuite()
 suite.addTest(unittest.makeSuite(TestMakerLogin))
