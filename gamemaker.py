@@ -24,7 +24,7 @@ class GameMaker:
     def logout(self):
         return_value = False
         current_user = self.database.get_current_user()
-        if current_user is "maker":
+        if current_user is self:
             self.database.set_current_user(None)
             return_value = True
         return return_value
