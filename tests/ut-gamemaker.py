@@ -3,6 +3,7 @@ import gamemaker
 import database
 import team
 import user
+import landmark
 
 class TestMakerLogin(unittest.TestCase):
     def set_up(self):
@@ -54,7 +55,25 @@ class TestMakerCheckStatus(unittest.TestCase):
         self.team2 = team.Team("team2", "password")
         dict = self.maker1.check_status()
         self.assertEquals(dict, "Team1 team2", "Cannot find entries in two team list")
-     
+
+class TestMakerLandmark(unittest.TestCase):
+    def set_up(self):
+        self.database = database.Database()
+        self.landmark1 = landmark.Landmark()
+        self.landmark2 = landmark.Landmark()
+        self.maker1 = gamemaker.GameMaker()
+
+    def test_add_clue(self):
+        self.landmark1.add_clue("In an area with tall buildings and a metal tower")
+        self.assertEquals(self.landmark1.get_clue(), "In an area with tall buildings and a metal tower", "Bad first clue")
+
+    def test_add_two_clues(self):
+        self.landmark1.add_clue("In an area with tall stuff")
+        self.landmark2.add_clue("In a building with a picture of a lady")
+        self.assertEquals(self.landmark1.get_clue(), "In an area with tall stuff", "First clue not given back for two clues")
+        self.assertEquals(self.landmark2.get_clue(), "In a building with a picture of a lady", "Second clue not given back")
+
+
 suite = unittest.TestSuite()
 suite.addTest(unittest.makeSuite(TestMakerLogin))
 suite.addTest(unittest.makeSuite(TestMakerLogout))
