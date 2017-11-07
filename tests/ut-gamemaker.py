@@ -48,8 +48,8 @@ class TestMakerLogin(unittest.TestCase):
     self.assertEquals(dict, "Team1", "Status incorrect for single team existing")
   
   def test_multiple_teams(self):
-    self.team1 = team.Team("Team1")
-    self.team2 = team.Team("team2")
+    self.team1 = team.Team("Team1", "Team1", "password")
+    self.team2 = team.Team("team2", "team2", "password")
     dict = self.maker1.check_status()
     self.assertEquals(dict, "Team1 team2", "Cannot find entries in two team list")
      
