@@ -4,7 +4,10 @@ class GameMaker:
 
     def login(self, name, password):
         returnValue = ""
-        if self.database.curUser.name != name and self.database.gameMakerCred == {name, password}:
+        current_user = self.database.get_current_user()
+        maker_cred = self.database.get_game_maker_cred()
+        if current_user != None and current_user.username != name:
+            if name == "maker" and maker_cred["maker"] == password:
             self.database.curUser.name = name
             returnValue = "User " + name + " logged in!"
         elif self.database.curUser.name == name:
