@@ -16,7 +16,7 @@ class GameMaker:
         string = ''
         teams = self.database.get_teams()
         for team in teams:
-            string += '' + team.username + '\n' #+ ' is at ' + team.landmark + ' with ' + team.penalties + ' penalties\n'
+            string += team.username + '\n' #+ ' is at ' + team.landmark + ' with ' + team.penalties + ' penalties\n'
         if string == '':
             string = 'No teams!'
         return string
@@ -28,3 +28,6 @@ class GameMaker:
             self.database.set_current_user(None)
             return_value = True
         return return_value
+
+    def display_menu(self):
+        return "What would you like to do?\nlog out\ndisplay statuses"
