@@ -7,11 +7,18 @@ class Escavenge():
   def __init__(self):
     self.database = database.Database()
     self.game_maker = gamemaker.GameMaker(database)
-    self.team
-    maker = {}
-    user = {}
 
-    maker["logout"] = lambda: self.game_maker.logout()
+    self.maker = {
+        "logout" : self.game_maker.logout(),
+        "login" : self.main(),
+        "display status" : self.game_maker.display_status()
+    }
+
+    self.user = {
+        "logout" : team.logout(database),
+        "login" : self.main(),
+        "display status" : team.display_status()
+    }
 
   def login(self,username, password):
       if(username is "maker"):
@@ -20,9 +27,7 @@ class Escavenge():
           teams = database.get_teams()
           for team in teams:
              if(team.username is username):
-                 #this is gross. Any better way?
-                 self.team = team
-                 return team.login()
+                 return team.login(database,username,password)
 
   def main(self):
 
@@ -37,7 +42,7 @@ class Escavenge():
             if(database.get_current_user() is "maker"):
                 print("Log in as game maker successful!")
                 cmd = input(self.game_maker.display_menu())
-                self.maker[cmd]
+                self.maker[cmd]()
             else:
                 print("Log in as " + database.get_current_user() + " successful!")
                 cmd = input(team.display_menu())
