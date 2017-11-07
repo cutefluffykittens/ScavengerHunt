@@ -4,6 +4,7 @@ class Team(int_user.User):
     def __init__(self,username,password):
         self.username = username
         self.password = password
+        #self.current_landmark = 0;
     def set_team_username(self,new_username):
         self.username = new_username
         return "Team username changed to " + new_username
@@ -23,4 +24,4 @@ class Team(int_user.User):
         database.set_current_user(None)
         return True
     def display_menu(self):
-        pass
+        return "Which would you like to do?\nlog out\ndisplay status"
