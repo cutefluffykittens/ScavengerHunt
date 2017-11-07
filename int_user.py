@@ -1,6 +1,6 @@
-from abc import ABC, abstractmethod
+from abc import ABCMeta, abstractmethod
 
-class User(ABC):
+class User(ABCMeta):
     @abstractmethod
     def login(self, database, username, password):
         pass
