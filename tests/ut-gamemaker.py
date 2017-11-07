@@ -10,14 +10,14 @@ class TestMakerLogin(unittest.TestCase):
     self.maker1 = gamemaker.GameMaker()
   
   def test_bad_login(self):
-     self.assertEquals(self.maker1.login("Notvalidusername","Notvalidpassword"), "Bad username or password!", "Bad response to invalid login")
-     self.assertEquals(self.database.curUser, None, "Current user is not null")
+     self.assertEquals(self.maker1.login("Notvalidusername","Notvalidpassword"), False, "Bad response to invalid login")
+     self.assertEquals(self.database.get_current_user(), {}, "Current user is not null")
   def test_good_login(self):
-     self.assertEquals(self.maker1.login("maker","password"), "User maker logged in!", "Maker should have logged in")
-     self.assertEquals(self.database.curUser.name, "maker", "Current user should be maker")
+     self.assertEquals(self.maker1.login("maker","password"), True, "Maker should have logged in")
+     self.assertEquals(self.database.get_current_user(), {"maker" : "password"}, "Current user should be maker")
   def test_good_login_while_logged_in(self):
     self.maker1.login("maker","password")
-    self.assertEquals(self.maker1.login("maker","password"), "Maker already logged in!", "Bad response to second login attempt")
+    self.assertEquals(self.maker1.login("maker","password"), False, "Bad response to second login attempt")
       
   class TestMakerLogout(unittest.TestCase):
     def set_up(self):
@@ -25,14 +25,14 @@ class TestMakerLogin(unittest.TestCase):
       self.maker1 = gamemaker.GameMaker()
     
     def test_logout_while_not_logged_in(self):
-      self.assertEquals(self.maker1.logout(), "maker is not logged in!", "Bad response to maker logging out while not logged in")
+      self.assertEquals(self.maker1.logout(), False, "Bad response to maker logging out while not logged in")
     def test_good_logout(self):
       self.maker1.login()
-      self.assertEquals(self.maker1.logout(), "maker logged out!", "Bad response to maker logging out correctly")
+      self.assertEquals(self.maker1.logout(), True, "Bad response to maker logging out correctly")
     def test_current_user_is_not_maker(self):
       self.maker1.login("maker","password")
       self.maker1.logout("maker")
-      self.assertEquals(self.database.curUser, None, "Current user is not null after logging out")
+      self.assertEquals(self.database.get_current_user(), None, "Current user is not null after logging out")
       
  class TestMakerCheckStatus(unittest.TestCase):
   def set_up(self):
