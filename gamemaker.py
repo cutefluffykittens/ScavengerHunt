@@ -3,17 +3,13 @@ class GameMaker:
         self.database = database
 
     def login(self, name, password):
-        returnValue = ""
+        returnValue = False
         current_user = self.database.get_current_user()
         maker_cred = self.database.get_game_maker_cred()
-        if current_user != None and current_user.username != name:
+        if current_user == None:
             if name == "maker" and maker_cred["maker"] == password:
-            self.database.curUser.name = name
-            returnValue = "User " + name + " logged in!"
-        elif self.database.curUser.name == name:
-            returnValue = "" + name + " already logged in!"
-        else:
-            returnValue = "Bad username or password!"
+                self.database.set_current_user(self)
+                returnValue = True
         return returnValue
 
     def check_status(self):
@@ -24,10 +20,9 @@ class GameMaker:
             return dict
 
     def logout(self):
-        returnValue = ""
-        if self.database.curUser != "maker":
-            returnValue = "maker is not logged in!"
-        else:
-            self.database.curUser = None
-            returnValue = "maker logged out!"
+        returnValue = False
+        current_user = self.database.get_current_user()
+        if "maker" in current_user:
+            self.database.set_current_user(None)
+            returnValue = True
         return returnValue
