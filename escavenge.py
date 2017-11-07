@@ -6,19 +6,21 @@ class Escavenge():
 
   def __init__(self):
     self.database = database.Database()
-    self.gameMaker = gamemaker.GameMaker(database)
-    self.user = team.Team(database)
+    self.game_maker = gamemaker.GameMaker(database)
+    self.team = team.Team(database)
     maker = {}
-    team = {}
+    user = {}
 
-    maker["logout"] = lambda: self.gameMaker.logout()
-    team["logout"] = lambda: self.user.logout()
+    maker["logout"] = lambda: self.game_maker.logout()
+    user["logout"] = lambda: self.team.logout()
 
   def login(self,username, password):
       if(username is "maker"):
-          self.gameMaker.login(username, password)
+          print(self.game_maker.login(username, password))
+          return True
       else:
-          self.user.login(username, password)
+          print(self.team.login(username, password))
+          return True
 
   def main(self):
 
@@ -29,10 +31,10 @@ class Escavenge():
 
         if(self.login(username, password)):
             if(database.get_current_user() is "maker"):
-                cmd = input(self.gameMaker.display_menu())
+                cmd = input(self.game_maker.display_menu())
                 self.maker[cmd]
             else:
                 cmd = input(team.display_menu())
-                self.team[cmd]
+                self.user[cmd]
 
 
