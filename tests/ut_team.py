@@ -4,12 +4,8 @@ import unittest
 
 class TestTeamLogin(unittest.TestCase):
     def setUp(self):
-        self.team1 = team.Team("Name1","username1","password1")
-        self.team2 = team.Team("Name2","username2","password2")
-    def test_set_team_name(self):
-        self.team1.set_team_name("n1")
-        self.assertEquals("n1", self.team1.name, "Error: changing team name failed")
-        #self.assertEquals("Team name changed to n1", self.team1.setTeamName("n1"), "Error: changing team name failed")
+        self.team1 = team.Team("teamname1","password1")
+        self.team2 = team.Team("teamname2","password2")
     def test_set_team_username(self):
         self.team1.set_team_username("u1")
         self.assertEquals("u1", self.team1.username, "Error: changing team user name failed")

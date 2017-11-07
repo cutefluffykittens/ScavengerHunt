@@ -1,13 +1,9 @@
 import int_user
 
 class Team(int_user.User):
-    def __init__(self,name,username,password):
-        self.name = name
+    def __init__(self,username,password):
         self.username = username
         self.password = password
-    def set_team_name(self,new_name):
-        self.name = new_name
-        return "Team name changed to " + new_name
     def set_team_username(self,new_username):
         self.username = new_username
         return "Team username changed to " + new_username
