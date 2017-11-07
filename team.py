@@ -16,15 +16,15 @@ class Team(int_user.User):
         return "Team password changed to " + new_password
     def login(self,database,username,password):
         result = "Unable to log in"
-        if database.current_user != self:
+        if database.get_current_user() != None:
             return result
         if username == self.username and password == self.password:
-            database.current_user = self
+            database.set_current_user(self)
             result = self.name + " logged in"
         return result
     def logout(self,database):
         result = "Unable to log out"
-        database.current_user = None
+        database.set_current_user(None)
         result = self.name + " logged out"
         return result
     def display_menu(self):
