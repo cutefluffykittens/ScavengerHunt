@@ -1,30 +1,31 @@
 import user
 
 class Team(user.User):
-    def __init__(self,name):
+    def __init__(self,name,username,password):
         self.name = name
-        self.username = "username"
-        self.password = "password"
-    def setTeamName(self,newName):
-        self.name = newName
-        return "Team name changed to " + newName
-    def setTeamUserName(self,newUsername):
-        self.username = newUsername
-        return "Team username changed to " + newUsername
-    def setTeamPassword(self,newPassword):
-        self.password = newPassword
-        return "Team password changed to " + newPassword
-    def login(self,username,password):
+        self.username = username
+        self.password = password
+    def set_team_name(self,new_name):
+        self.name = new_name
+        return "Team name changed to " + new_name
+    def set_team_username(self,new_username):
+        self.username = new_username
+        return "Team username changed to " + new_username
+    def set_team_password(self,new_password):
+        self.password = new_password
+        return "Team password changed to " + new_password
+    def login(self,database,username,password):
         result = "Unable to log in"
-        # TODO: if someone is already logged in, just return result
+        if database.current_user != self:
+            return result
         if username == self.username and password == self.password:
-            # TODO: set currentUser to this user
+            database.current_user = self
             result = self.name + " logged in"
         return result
-    def logout(self):
+    def logout(self,database):
         result = "Unable to log out"
-        # TODO: if someone is not logged in, or if team trying to log out is not the team currently logged in, return result
+        database.current_user = None
         result = self.name + " logged out"
         return result
-    def displayMenu(self):
+    def display_menu(self):
         pass

@@ -2,11 +2,11 @@ import abc
 
 class User(abc.ABC):
     @abc.abstractmethod
-    def login(self, username, password):
+    def login(self, database, username, password):
         pass
     @abc.abstractmethod
-    def logout(self):
+    def logout(self, database):
         pass
     @abc.abstractmethod
-    def displayMenu(self):
+    def display_menu(self):
         pass
