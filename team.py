@@ -1,6 +1,6 @@
-import user
+import int_user
 
-class Team(user.User):
+class Team(int_user.User):
     def __init__(self,name,username,password):
         self.name = name
         self.username = username
