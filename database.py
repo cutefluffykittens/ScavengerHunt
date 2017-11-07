@@ -61,3 +61,9 @@ class Database:
 
     def get_game_maker_cred(self):
         return self.game_maker_cred
+
+    def get_current_user(self):
+        return self.current_user
+
+    def set_current_user(self, user):
+        self.current_user = user
