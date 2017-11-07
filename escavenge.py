@@ -1,7 +1,7 @@
 import database
 import gamemaker
 
-class Main():
+class Escavenge():
   user = ""
   password = ""
   cmd = ""
