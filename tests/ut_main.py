@@ -10,11 +10,11 @@ class TestDatabaseCreation(unittest.TestCase):
   def setUp(self):
     self.db = database.Database()
     self.gameMaker = gamemaker.GameMaker()
-  
+    self.game = escavenge.Escavenge()
+
   def accessDB(self):
-    pass
-    #stub for now : check that we can access the database
-    # How do i verify that the database is open???
+    self.assertFalse(self.game.database, None, "The database is Null")
+    # Add more tests probably
 
 class TestLogin(unittest.TestCase):
   #Test log in functionality. Will determine if username belongs to gamemaker or team and call correct method
