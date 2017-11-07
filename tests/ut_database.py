@@ -1,43 +1,29 @@
 import unittest
+import team
+import landmark
 import database
 
-# TODO: Uncomment these statements once implementations have been made
-#import teamUser
-#import landmark
-
-# Stubs just for these classes until actual classes have been created
-
-class TeamUser:
-    def __init__(self):
-        pass
-
-class Landmark:
-    def __init__(self):
-        pass
 
 class TestTeamList(unittest.TestCase):
     def setUp(self):
         self.db = database.Database()
-        # TODO: Uncomment these statements once implementations have been made
-        # self.team1 = teamUser.TeamUser()
-        # self.team2 = teamUser.TeamUser()
-        self.team1 = TeamUser()
-        self.team2 = TeamUser()
+        self.team1 = team.Team()
+        self.team2 = team.Team()
 
-    def test_addTeamEmptyList(self):
+    def test_add_team_empty_list(self):
         self.db.add_team(self.team1)
         self.assertEquals(self.db.get_teams(), [self.team1], "addTeamEmptyList: Team list not correct")
 
-    def test_addTeamNonEmptyList(self):
+    def test_add_team_non_empty_list(self):
         self.db.add_team(self.team1)
         self.db.add_team(self.team2)
         self.assertEquals(self.db.get_teams(), [self.team1, self.team2], "addTeamNonEmptyList: Team list not correct")
 
-    def test_deleteTeamEmptyList(self):
+    def test_delete_team_empty_list(self):
         self.db.delete_team(self.team1)
         self.assertEquals(self.db.get_teams(), [], "deleteTeamEmptyList: Team list not correct")
 
-    def test_deleteTeamNonEmptyList(self):
+    def test_delete_team_non_empty_list(self):
         self.db.add_team(self.team1)
         self.db.delete_team(self.team1)
         self.assertEquals(self.db.get_teams(), [], "deleteTeamNonEmptyList: Team list not correct")
@@ -46,11 +32,8 @@ class TestTeamList(unittest.TestCase):
 class TestLandmarks(unittest.TestCase):
     def setUp(self):
         self.db = database.Database()
-        # TODO: Uncomment these statements once implementations have been made
-        # self.landmark1 = landmark.Landmark()
-        # self.landmark2 = landmark.Landmark()
-        self.landmark1 = Landmark()
-        self.landmark2 = Landmark()
+        self.landmark1 = landmark.Landmark("clue")
+        self.landmark2 = landmark.Landmark("clue")
 
     def test_addLandmarkEmptyList(self):
         self.db.add_landmark(self.landmark1)
@@ -74,11 +57,8 @@ class TestLandmarks(unittest.TestCase):
 class TestLandmarkPath(unittest.TestCase):
     def setUp(self):
         self.db = database.Database()
-        # TODO: Uncomment these statements once implementations have been made
-        # self.landmark1 = landmark.Landmark()
-        # self.landmark2 = landmark.Landmark()
-        self.landmark1 = Landmark()
-        self.landmark2 = Landmark()
+        self.landmark1 = landmark.Landmark("clue")
+        self.landmark2 = landmark.Landmark("clue")
 
     def test_addLandmarkEmptyList(self):
         self.db.add_to_path(self.landmark1)
