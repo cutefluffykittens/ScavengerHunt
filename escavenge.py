@@ -25,8 +25,8 @@ class Escavenge():
 
         # Hard-coding this for now until we have this functionality:
 
-        self.database.add_team(team.Team("user1", "password1", self.database))
-        self.database.add_team(team.Team("user2", "password2", self.database))
+        self.database.add_team(team.Team("team1", "password1", self.database))
+        self.database.add_team(team.Team("team2", "password2", self.database))
 
     def login(self, username, password):
         if (username == "maker"):
