@@ -4,7 +4,6 @@ class Team(int_user.User):
     def __init__(self,username,password):
         self.username = username
         self.password = password
-        return "Team name changed to " + new_name
     def set_team_username(self,new_username):
         self.username = new_username
         return "Team username changed to " + new_username
