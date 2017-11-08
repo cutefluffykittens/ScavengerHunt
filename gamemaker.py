@@ -12,7 +12,7 @@ class GameMaker:
                 return_value = True
         return return_value
 
-    def check_status(self):
+    def display_status(self):
         string = ''
         teams = self.database.get_teams()
         for team in teams:
@@ -30,4 +30,4 @@ class GameMaker:
         return return_value
 
     def display_menu(self):
-        return "What would you like to do?\nlog out\ndisplay statuses"
+        return "Options\n\nlog out\ndisplay status\n"
