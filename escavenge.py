@@ -8,8 +8,6 @@ class Escavenge():
         self.database = database.Database()
         self.game_maker = gamemaker.GameMaker(self.database)
 
-        self.test = {"test":"test"}
-
         self.maker = {
             "log out": lambda: self.game_maker.logout(),
             "login": lambda: self.main,
