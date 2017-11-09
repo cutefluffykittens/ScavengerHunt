@@ -31,7 +31,7 @@ class TestTeamLogin(unittest.TestCase):
         self.assertFalse(self.team1.logout(), "Error: cannot log out when no team is logged in")
     def test_display_menu(self):
         self.team1.login("teamname1","password1")
-        self.assertEquals("Options\n\nlog out\ndisplay status",self.team1.display_menu(),"Error: incorrect menu displayed")
+        self.assertEquals("Options\n\nlog out\ndisplay status\n",self.team1.display_menu(),"Error: incorrect menu displayed")
 
 suite = unittest.TestSuite()
 suite.addTest(unittest.makeSuite(TestTeamLogin))

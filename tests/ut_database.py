@@ -7,8 +7,8 @@ import database
 class TestTeamList(unittest.TestCase):
     def setUp(self):
         self.db = database.Database()
-        self.team1 = team.Team()
-        self.team2 = team.Team()
+        self.team1 = team.Team("team1", "password1", self.db);
+        self.team2 = team.Team("team2", "password2", self.db)
 
     def test_add_team_empty_list(self):
         self.db.add_team(self.team1)
@@ -99,7 +99,7 @@ class TestGameMakerCred(unittest.TestCase):
         self.db = database.Database()
 
     def test_getGameMakerCred(self):
-        self.assertEquals(self.db.get_game_maker_cred(), {"username":"username", "password":"password"}, "getGameMakerCred: Cred was incorrect")
+        self.assertEquals(self.db.get_game_maker_cred(), {"username":"maker", "password":"password"}, "getGameMakerCred: Cred was incorrect")
 
 
 suite = unittest.TestSuite()

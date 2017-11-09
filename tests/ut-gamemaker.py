@@ -2,7 +2,6 @@ import unittest
 import gamemaker
 import database
 import team
-import user
 import landmark
 
 class TestMakerLogin(unittest.TestCase):
