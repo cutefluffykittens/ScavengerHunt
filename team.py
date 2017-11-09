@@ -21,7 +21,7 @@ class Team():
             return True
         return False
     def logout(self):
-        if self.database.get_current_user() is not self:
+        if self.database.get_current_user() is not self
             return False
         self.database.set_current_user(None)
         return True
