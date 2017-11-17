@@ -9,15 +9,15 @@ class Escavenge():
         self.game_maker = gamemaker.GameMaker(self.database)
 
         self.maker = {
-            "log out": lambda: self.game_maker.logout(),
+            "logout": lambda: self.game_maker.logout(),
             "login": lambda: self.main,
-            "display status": lambda: print(self.game_maker.display_status()),
+            "displaystatus": lambda: print(self.game_maker.display_status()),
             "help": lambda: print(self.game_maker.display_menu())
         }
 
         self.team = {
-            "log out": lambda team: team.logout(),
-            "display status": lambda team: print(team.display_status()),
+            "logout": lambda team: team.logout(),
+            "displaystatus": lambda team: print(team.display_status()),
             "help": lambda team: print(team.display_menu())
         }
 
@@ -39,9 +39,11 @@ class Escavenge():
 
     def maker_cmd(self):
         cmd = None
-        while(cmd != "log out"):
+        while(cmd != "logout"):
             cmd = input("What would you like to do (type \"help\" to display menu): ")
             try:
+                cmd = cmd.lower()
+                cmd = cmd.replace(" ","")
                 self.maker[cmd]()
             except KeyError:
                 print("That is not a valid command.")
@@ -50,9 +52,11 @@ class Escavenge():
     def team_cmd(self):
         team = self.database.get_current_user()
         cmd = None
-        while cmd != "log out":
+        while cmd != "logout":
             cmd = input("What would you like to do (type \"help\" to display menu): ")
             try:
+                cmd = cmd.lower()
+                cmd = cmd.replace(" ","")
                 self.team[cmd](team)
             except KeyError:
                 print("That is not a valid command.")
