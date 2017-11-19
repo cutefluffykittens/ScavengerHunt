@@ -7,12 +7,6 @@ class Team():
         self.username = username
         self.password = password
         self.database = database
-    def set_team_username(self,new_username):
-        self.username = new_username
-        return "Team username changed to " + new_username
-    def set_team_password(self,new_password):
-        self.password = new_password
-        return "Team password changed to " + new_password
     def login(self,username,password):
         if self.database.get_current_user() != None:
             return False
@@ -26,13 +20,22 @@ class Team():
         self.database.set_current_user(None)
         return True
     def display_menu(self):
-        return "Options\n\nlog out\ndisplay status\n"
+        return "Options\n\nlog out\ndisplay status\nedit username\nedit password\n"
 
     def display_status(self):
         return "Team: " + self.username
 
     def edit_username(self, username):
-        return True
+        if self.database.get_current_user() is not self:
+            return False
+        self.username = username
+        ret = "Username successfully changed to " + username
+        return ret
+
 
     def edit_password(self, password):
-        return True
+        if self.database.get_current_user() is not self:
+            return False
+        self.password = password
+        ret = "Password successfully changed to " + password
+        return ret

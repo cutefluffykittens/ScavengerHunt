@@ -18,7 +18,9 @@ class Escavenge():
         self.team = {
             "logout": lambda team: team.logout(),
             "displaystatus": lambda team: print(team.display_status()),
-            "help": lambda team: print(team.display_menu())
+            "help": lambda team: print(team.display_menu()),
+            "editusername" : lambda team: print(team.edit_username(input("What would you like your new username to be? "))),
+            "editpassword" : lambda team: print(team.edit_password(input("What would you like your new password to be? ")))
         }
 
         # Hard-coding this for now until we have this functionality:
