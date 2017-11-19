@@ -30,3 +30,9 @@ class Team():
 
     def display_status(self):
         return "Team: " + self.username
+
+    def edit_username(self, username):
+        return True
+
+    def edit_password(self, password):
+        return True
