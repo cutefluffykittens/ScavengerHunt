@@ -1,5 +1,6 @@
 import team
 import database
+import landmark
 import unittest
 
 class TestTeamLogin(unittest.TestCase):
@@ -73,6 +74,33 @@ class TestTeamCommands(unittest.TestCase):
         self.team1.login("teamname1","password1")
         self.assertEqual("Options\n\nlog out\ndisplay status\nedit username\nedit password\n",self.team1.display_menu(),"Error: incorrect menu displayed")
 
+class TestTeamAnswerQuestions(unittest.TestCase):
+    def setUp(self):
+        self.database = database.Database()
+        self.team1 = team.Team("teamname1", "password1", self.database)
+        self.team2 = team.Team("teamname2", "password2", self.database)
+        self.database.add_team(self.team1)
+        self.database.add_team(self.team2)
+        self.landmark1 = landmark.Landmark("clue")
+        self.landmark1.add_question("q1","a1")
+    def test_answer_no_team_logged_in(self):
+        self.assertFalse(self.team1.answer_question("test"),"Error: cannot answer a question when not logged in")
+    def test_answer_wrong_team_logged_in(self):
+        self.team1.login("teamname1","password1")
+        self.assertFalse(self.team2.answer_question("test"),"Error: a team that is not the current user cannot answer the question")
+    def test_answer_no_landmarks_added(self):
+        self.team1.login("teamname1","password1")
+        self.assertFalse(self.team1.answer_question("test"),"Error: cannot answer a question when there are no landmarks")
+    def test_answer_correctly(self):
+        self.team1.login("teamname1","password1")
+        self.database.add_to_path(self.landmark1)
+        self.assertTrue(self.team1.answer_question("a1"),"Error: should have returned True when answered correctly")
+        self.assertEqual(1,self.team1.current_landmark,"Error: current landmark was not updated properly")
+    def test_answer_incorrectly(self):
+        self.team1.login("teamname1","password1")
+        self.database.add_to_path(self.landmark1)
+        self.assertFalse(self.team1.answer_question("wrong answer"),"Error: should have returned False when answered incorrectly")
+        self.assertEqual(0,self.team1.current_landmark,"Error: current landmark should remain the same")
 
 suite = unittest.TestSuite()
 suite.addTest(unittest.makeSuite(TestTeamLogin))
@@ -80,7 +108,7 @@ suite.addTest(unittest.makeSuite(TestTeamLogout))
 suite.addTest(unittest.makeSuite(TestTeamEditUsername))
 suite.addTest(unittest.makeSuite(TestTeamEditPassword))
 suite.addTest(unittest.makeSuite(TestTeamCommands))
-
+suite.addTest(unittest.makeSuite(TestTeamAnswerQuestions))
 
 runner = unittest.TextTestRunner()
 res=runner.run(suite)

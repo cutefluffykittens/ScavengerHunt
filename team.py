@@ -1,5 +1,6 @@
 #import int_user
 import database
+import landmark
 
 #class Team(int_user.User):
 class Team():
@@ -7,6 +8,7 @@ class Team():
         self.username = username
         self.password = password
         self.database = database
+        self.current_landmark = 0
     def login(self,username,password):
         if self.database.get_current_user() != None:
             return False
@@ -38,4 +40,23 @@ class Team():
             return False
         self.password = password
         ret = "Password successfully changed to " + password
+        return ret
+
+    def get_current_landmark(self):
+        if self.database.get_current_user() is not self:
+            return False
+        pass
+
+    def answer_question(self, user_answer):
+        if self.database.get_current_user() is not self:
+            return False
+        landmarks = self.database.get_landmark_path()
+        try:
+            l = landmarks[self.current_landmark]
+        except IndexError:
+            return False
+        question = list(l.get_questions().keys())[0]
+        ret = landmarks[self.current_landmark].verify_answer(question,user_answer)
+        if ret:
+            self.current_landmark += 1
         return ret
