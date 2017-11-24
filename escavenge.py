@@ -10,9 +10,6 @@ class Escavenge():
 
         self.maker = {
             "log out": lambda: self.game_maker.logout(),
-            "make team": lambda: self.game_maker.make_team(input),
-            "edit team": lambda: self.game_maker.edit_team(input),
-            "set penalties": lambda: self.game_maker.set_penalties(input),
             "login": lambda: self.main,
             "display status": lambda: print(self.game_maker.display_status()),
             "help": lambda: print(self.game_maker.display_menu())
@@ -44,16 +41,8 @@ class Escavenge():
         cmd = None
         while(cmd != "log out"):
             cmd = input("What would you like to do (type \"help\" to display menu): ")
-            if (cmd is "make team"):
-                team_input = input("Enter a username and password with a space between: ")
-            elif (cmd is "edit team"):
-                team_input = input("Enter the name of the team to edit followed by the new name"
-                                   " and password with spaces between: ")
-            elif (cmd is "set penalties"):
-                team_input = input("Enter the time penalty (minutes) and guess penalty (number of guesses)"
-                                   "with a space between: ")
             try:
-                self.maker[cmd](team_input)
+                self.maker[cmd]()
             except KeyError:
                 print("That is not a valid command.")
         self.main()
