@@ -1,29 +1,33 @@
 class Landmark:
-    def __init__(self, clue):
-        self.questions = {}
+    def __init__(self, name, clue, question, answer):
+        self.name = name
+        self.clue = clue
+        self.question = question
+        self.answer = answer
+
+    def get_name(self):
+        return self.name
+
+    def set_name(self, name):
+        self.name = name
+
+    def get_question(self):
+        return self.question
+
+    def set_question(self, question):
+        self.question = question
+
+    def get_clue(self):
+        return self.clue
+
+    def set_clue(self, clue):
         self.clue = clue
 
-    def get_questions(self):
-        return self.questions
+    def set_answer(self, answer):
+        self.answer = answer
 
-    def add_question(self, question, answer):
-        if question in self.questions.keys():
-            return False
-        else:
-            self.questions[question] = answer
-            return True
+    def get_answer(self):
+        return self.answer
 
-    def edit_question(self, question, answer):
-        self.questions[question] = answer
-
-    def remove_question(self, question):
-        try:
-            self.questions.pop(question)
-            return True
-        except KeyError:
-            return False
-
-    def verify_answer(self, question, answer):
-        if self.questions[question] is answer:
-            return True
-        return False
+    def verify_answer(self, answer):
+        return self.answer == answer

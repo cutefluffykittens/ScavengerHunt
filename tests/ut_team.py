@@ -41,7 +41,7 @@ class TestTeamEditUsername(unittest.TestCase):
         self.assertFalse(self.team1.edit_username("bestteam"), "Error: cannot edit username with no team logged in")
     def test_edit_username(self):
         self.team1.login("teamname1","password1")
-        self.assertEqual("Username successfully changed to bestteam", self.team1.edit_username("bestteam"), "Error: username change did not return True")
+        self.assertEqual("Username successfully changed to bestteam", self.team1.edit_username(["bestteam"]), "Error: username change did not return True")
         self.assertEqual("bestteam", self.team1.username, "Error: username was not changed")
         self.assertEqual("bestteam", self.database.get_current_user().username,
                          "Error: Database does not have correct username as current user")
@@ -59,7 +59,7 @@ class TestTeamEditPassword(unittest.TestCase):
         self.assertFalse(self.team1.edit_password("kittens"),"Error: cannot edit password with no team logged in")
     def test_edit_password(self):
         self.team1.login("teamname1","password1")
-        self.assertEqual("Password successfully changed to kittens", self.team1.edit_password("kittens"), "Error: password change did not return True")
+        self.assertEqual("Password successfully changed to kittens", self.team1.edit_password(["kittens"]), "Error: password change did not return True")
         self.assertEqual("kittens", self.team1.password, "Error: password was not changed")
         self.assertEqual("kittens", self.database.get_teams().pop(0).password,
                          "Error: password was not updated in database's list of teams")
