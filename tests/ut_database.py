@@ -32,8 +32,8 @@ class TestTeamList(unittest.TestCase):
 class TestLandmarks(unittest.TestCase):
     def setUp(self):
         self.db = database.Database()
-        self.landmark1 = landmark.Landmark("clue")
-        self.landmark2 = landmark.Landmark("clue")
+        self.landmark1 = landmark.Landmark("name1", "clue1", "question1", "answer1")
+        self.landmark2 = landmark.Landmark("name2", "clue2", "question2", "answer2")
 
     def test_addLandmarkEmptyList(self):
         self.db.add_landmark(self.landmark1)
@@ -44,21 +44,21 @@ class TestLandmarks(unittest.TestCase):
         self.db.add_landmark(self.landmark2)
         self.assertEquals(self.db.get_landmarks(), [self.landmark1, self.landmark2], "addLandmarkNonEmptyList: Team list not correct")
 
-    def test_deleteLandmarkEmptyList(self):
-        self.db.delete_landmark(self.landmark1)
-        self.assertEquals(self.db.get_landmarks(), [], "deleteLandmarkEmptyList: Team list not correct")
+    def test_removeLandmarkEmptyList(self):
+        self.db.remove_landmark(self.landmark1)
+        self.assertEquals(self.db.get_landmarks(), [], "removeLandmarkEmptyList: Team list not correct")
 
-    def test_deleteLandmarkNonEmptyList(self):
+    def test_removeLandmarkNonEmptyList(self):
         self.db.add_landmark(self.landmark1)
-        self.db.delete_landmark(self.landmark1)
-        self.assertEquals(self.db.get_landmarks(), [], "deleteLandmarkNonEmptyList: Team list not correct")
+        self.db.remove_landmark(self.landmark1)
+        self.assertEquals(self.db.get_landmarks(), [], "removeLandmarkNonEmptyList: Team list not correct")
 
 
 class TestLandmarkPath(unittest.TestCase):
     def setUp(self):
         self.db = database.Database()
-        self.landmark1 = landmark.Landmark("clue")
-        self.landmark2 = landmark.Landmark("clue")
+        self.landmark1 = landmark.Landmark("name1", "clue1", "question1", "answer1")
+        self.landmark2 = landmark.Landmark("name2", "clue2", "question2", "answer2")
 
     def test_addLandmarkEmptyList(self):
         self.db.add_to_path(self.landmark1)
