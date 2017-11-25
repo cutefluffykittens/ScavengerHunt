@@ -30,7 +30,7 @@ class Escavenge():
         self.database.add_team(team.Team("team2", "password2", self.database))
 
     def login(self, username, password):
-        if (username == "maker"):
+        if username == "maker":
             return self.game_maker.login(username, password)
         else:
             teams = self.database.get_teams()
@@ -42,7 +42,7 @@ class Escavenge():
 
     def maker_cmd(self):
         cmd = None
-        while(cmd != "logout"):
+        while cmd != "logout":
             cmd = input("What would you like to do (type \"help\" to display menu): ")
             try:
                 cmd = cmd.lower()
