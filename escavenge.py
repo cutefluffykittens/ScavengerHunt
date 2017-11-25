@@ -23,7 +23,8 @@ class Escavenge():
             "displaystatus": lambda team: print(team.display_status()),
             "help": lambda team: print(team.display_menu()),
             "editusername" : lambda team, input: print(team.edit_username(input)),
-            "editpassword" : lambda team, input: print(team.edit_password(input))
+            "editpassword" : lambda team, input: print(team.edit_password(input)),
+            "answer" : lambda team, input: print(team.answer_question(input))
         }
 
         # Hard-coding this for now until we have this functionality:
@@ -32,7 +33,7 @@ class Escavenge():
         self.database.add_team(team.Team("team2", "password2", self.database))
 
     def login(self, username, password):
-        if (username == "maker"):
+        if username == "maker":
             return self.game_maker.login(username, password)
         else:
             teams = self.database.get_teams()
@@ -44,7 +45,7 @@ class Escavenge():
 
     def maker_cmd(self):
         cmd = None
-        while(cmd != "logout"):
+        while cmd != "logout":
             cmd = input("What would you like to do (type \"help\" to display menu): ")
             try:
                 cmd = cmd.lower()
@@ -75,7 +76,7 @@ class Escavenge():
 
         print("Welcome to Escavenge!\n")
 
-        while (True):
+        while True:
 
             username = input("Please enter your username: ")
             password = input("Please enter your password: ")

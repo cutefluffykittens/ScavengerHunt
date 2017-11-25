@@ -22,7 +22,7 @@ class Team():
         self.database.set_current_user(None)
         return True
     def display_menu(self):
-        return "Options\n\nlog out\ndisplay status\nedit username\nedit password\n"
+        return "Options\n\nlog out\ndisplay status\nedit username\nedit password\nanswer\n"
 
     def display_status(self):
         return "Team: " + self.username
@@ -44,21 +44,18 @@ class Team():
         ret = "Password successfully changed to " + password
         return ret
 
-    def get_current_landmark(self):
-        if self.database.get_current_user() is not self:
-            return False
-        pass
-
     def answer_question(self, user_answer):
         if self.database.get_current_user() is not self:
             return False
         landmarks = self.database.get_landmark_path()
         try:
-            l = landmarks[self.current_landmark]
+            check_landmark = landmarks[self.current_landmark]
         except IndexError:
             return False
-        question = list(l.get_questions().keys())[0]
-        ret = landmarks[self.current_landmark].verify_answer(question,user_answer)
-        if ret:
+        ret_string = ""
+        if check_landmark.verify_answer(user_answer):
             self.current_landmark += 1
-        return ret
+            ret_string = "Correct answer given! You can now request the clue for the next landmark"
+        else:
+            ret_string = "Incorrect answer, please try again"
+        return ret_string
