@@ -9,18 +9,18 @@ class Escavenge():
         self.game_maker = gamemaker.GameMaker(self.database)
 
         self.maker = {
-            "log out": lambda: self.game_maker.logout(),
-            "make team": lambda: self.game_maker.make_team(input),
-            "edit team": lambda: self.game_maker.edit_team(input),
-            "set penalties": lambda: self.game_maker.set_penalties(input),
+            "logout": lambda: self.game_maker.logout(),
             "login": lambda: self.main,
-            "display status": lambda: print(self.game_maker.display_status()),
-            "help": lambda: print(self.game_maker.display_menu())
+            "displaystatus": lambda: print(self.game_maker.display_status()),
+            "help": lambda: print(self.game_maker.display_menu()),
+            "maketeam": lambda: self.game_maker.make_team(input),
+            "editteam": lambda: self.game_maker.edit_team(input),
+            "setpenalties": lambda: self.game_maker.set_penalties(input),
         }
 
         self.team = {
-            "log out": lambda team: team.logout(),
-            "display status": lambda team: print(team.display_status()),
+            "logout": lambda team: team.logout(),
+            "displaystatus": lambda team: print(team.display_status()),
             "help": lambda team: print(team.display_menu())
         }
 
@@ -42,18 +42,14 @@ class Escavenge():
 
     def maker_cmd(self):
         cmd = None
-        while(cmd != "log out"):
+        while(cmd != "logout"):
             cmd = input("What would you like to do (type \"help\" to display menu): ")
-            if (cmd is "make team"):
-                team_input = input("Enter a username and password with a space between: ")
-            elif (cmd is "edit team"):
-                team_input = input("Enter the name of the team to edit followed by the new name"
-                                   " and password with spaces between: ")
-            elif (cmd is "set penalties"):
-                team_input = input("Enter the time penalty (minutes) and guess penalty (number of guesses)"
-                                   "with a space between: ")
             try:
-                self.maker[cmd](team_input)
+                cmd = cmd.lower()
+                input = cmd.split(", ")
+                cmd = cmd.split(" ")[0]
+                input[0] = cmd.split(" ")[1]
+                self.maker[cmd](input)
             except KeyError:
                 print("That is not a valid command.")
         self.main()
@@ -61,10 +57,14 @@ class Escavenge():
     def team_cmd(self):
         team = self.database.get_current_user()
         cmd = None
-        while cmd != "log out":
+        while cmd != "logout":
             cmd = input("What would you like to do (type \"help\" to display menu): ")
             try:
-                self.team[cmd](team)
+                cmd = cmd.lower()
+                input = cmd.split(", ")
+                cmd = cmd.split(" ")[0]
+                input[0] = cmd.split(" ")[1]
+                self.team[cmd](team, input)
             except KeyError:
                 print("That is not a valid command.")
         self.main()
