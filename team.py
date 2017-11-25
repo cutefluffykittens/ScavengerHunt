@@ -46,12 +46,12 @@ class Team():
 
     def answer_question(self, user_answer):
         if self.database.get_current_user() is not self:
-            return False
+            return "Cannot answer question when not logged in!"
         landmarks = self.database.get_landmark_path()
         try:
             check_landmark = landmarks[self.current_landmark]
         except IndexError:
-            return False
+            return "Not at a valid landmark"
         ret_string = ""
         if check_landmark.verify_answer(user_answer):
             self.current_landmark += 1
