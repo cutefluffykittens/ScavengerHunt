@@ -27,7 +27,8 @@ class Team():
     def display_status(self):
         return "Team: " + self.username
 
-    def edit_username(self, username):
+    def edit_username(self, input):
+        username = input[0]
         if self.database.get_current_user() is not self:
             return False
         self.username = username
@@ -35,7 +36,8 @@ class Team():
         return ret
 
 
-    def edit_password(self, password):
+    def edit_password(self, input):
+        password = input[0]
         if self.database.get_current_user() is not self:
             return False
         self.password = password

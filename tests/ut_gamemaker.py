@@ -58,25 +58,39 @@ class TestMakerCheckStatus(unittest.TestCase):
         dict = self.maker1.display_status()
         self.assertEquals(dict, "Team1\nteam2\n", "Cannot find entries in two team list")
 
-# Functionality to be added later
+class TestMakerLandmark(unittest.TestCase):
+    def setUp(self):
+        self.database = database.Database()
+        self.maker1 = gamemaker.GameMaker(self.database)
+        self.input1 = ["name1", "clue1", "question1", "answer1"]
+        self.input2 = ["name2", "clue2", "question2", "answer2"]
 
-# class TestMakerLandmark(unittest.TestCase):
-#     def setUp(self):
-#         self.database = database.Database()
-#         self.landmark1 = landmark.Landmark("clue1")
-#         self.landmark2 = landmark.Landmark("clue2")
-#         self.maker1 = gamemaker.GameMaker(self.database)
-#
-#     def test_add_clue(self):
-#         self.landmark1.add_clue("In an area with tall buildings and a metal tower")
-#         self.assertEquals(self.landmark1.get_clue(), "In an area with tall buildings and a metal tower", "Bad first clue")
-#
-#     def test_add_two_clues(self):
-#         self.landmark1.add_clue("In an area with tall stuff")
-#         self.landmark2.add_clue("In a building with a picture of a lady")
-#         self.assertEquals(self.landmark1.get_clue(), "In an area with tall stuff", "First clue not given back for two clues")
-#         self.assertEquals(self.landmark2.get_clue(), "In a building with a picture of a lady", "Second clue not given back")
+    def test_add_landmark_empty(self):
+        self.maker1.add_landmark(self.input1)
+        self.assertEqual(self.database.get_landmarks()[0].get_name(), self.input1[0], "test_add_landmark_empty: Landmark name wasn't correct")
+        self.assertEqual(self.database.get_landmarks()[0].get_clue(), self.input1[1], "test_add_landmark_empty: Landmark clue wasn't correct")
+        self.assertEqual(self.database.get_landmarks()[0].get_question(), self.input1[2], "test_add_landmark_empty: Landmark question wasn't correct")
+        self.assertEqual(self.database.get_landmarks()[0].get_answer(), self.input1[3], "test_add_landmark_empty: Landmark answer wasn't correct")
 
+    def test_add_landmark_not_empty(self):
+        self.maker1.add_landmark(self.input1)
+        self.maker1.add_landmark(self.input2)
+        self.assertEqual(self.database.get_landmarks()[0].get_name(), self.input1[0], "test_add_landmark_not_empty: Landmark name wasn't correct")
+        self.assertEqual(self.database.get_landmarks()[0].get_clue(), self.input1[1], "test_add_landmark_not_empty: Landmark clue wasn't correct")
+        self.assertEqual(self.database.get_landmarks()[0].get_question(), self.input1[2], "test_add_landmark_not_empty: Landmark question wasn't correct")
+        self.assertEqual(self.database.get_landmarks()[0].get_answer(), self.input1[3], "test_add_landmark_not_empty: Landmark answer wasn't correct")
+        self.assertEqual(self.database.get_landmarks()[1].get_name(), self.input2[0], "test_add_landmark_not_empty: Landmark name wasn't correct")
+        self.assertEqual(self.database.get_landmarks()[1].get_clue(), self.input2[1], "test_add_landmark_not_empty: Landmark clue wasn't correct")
+        self.assertEqual(self.database.get_landmarks()[1].get_question(), self.input2[2], "test_add_landmark_not_empty: Landmark question wasn't correct")
+        self.assertEqual(self.database.get_landmarks()[1].get_answer(), self.input2[3], "test_add_landmark_not_empty: Landmark answer wasn't correct")
+
+
+    def test_remove_landmark_correct(self):
+        self.maker1.add_landmark(self.input1)
+        self.assertEqual(self.maker1.remove_landmark([self.input1[0]]), "Removed " + self.input1[0] + " from landmarks.", "test_delete_landmark_correct: Didn't delete correctly")
+
+    def test_remove_landmark_incorrect(self):
+        self.assertEqual(self.maker1.remove_landmark([self.input1[0]]), "Couldn't find landmark with name " + self.input1[0], "test_remove_landmark_incorrect: Shouldn't have deleted")
 
 suite = unittest.TestSuite()
 suite.addTest(unittest.makeSuite(TestMakerLogin))

@@ -12,15 +12,18 @@ class Escavenge():
             "logout": lambda: self.game_maker.logout(),
             "login": lambda: self.main,
             "displaystatus": lambda: print(self.game_maker.display_status()),
-            "help": lambda: print(self.game_maker.display_menu())
+            "help": lambda: print(self.game_maker.display_menu()),
+            "addlandmark": lambda input: self.game_maker.add_landmark(input),
+            "displaylandmark": lambda: self.game_maker.display_landmarks(),
+            "removelandmark": lambda input: self.game_maker.remove_landmark(input)
         }
 
         self.team = {
             "logout": lambda team: team.logout(),
             "displaystatus": lambda team: print(team.display_status()),
             "help": lambda team: print(team.display_menu()),
-            "editusername" : lambda team: print(team.edit_username(input("What would you like your new username to be? "))),
-            "editpassword" : lambda team: print(team.edit_password(input("What would you like your new password to be? ")))
+            "editusername" : lambda team, input: print(team.edit_username(input)),
+            "editpassword" : lambda team, input: print(team.edit_password(input))
         }
 
         # Hard-coding this for now until we have this functionality:
@@ -45,8 +48,10 @@ class Escavenge():
             cmd = input("What would you like to do (type \"help\" to display menu): ")
             try:
                 cmd = cmd.lower()
-                cmd = cmd.replace(" ","")
-                self.maker[cmd]()
+                input = cmd.split(", ")
+                cmd = cmd.split(" ")[0]
+                input[0] = cmd.split(" ")[1]
+                self.maker[cmd](input)
             except KeyError:
                 print("That is not a valid command.")
         self.main()
@@ -58,8 +63,10 @@ class Escavenge():
             cmd = input("What would you like to do (type \"help\" to display menu): ")
             try:
                 cmd = cmd.lower()
-                cmd = cmd.replace(" ","")
-                self.team[cmd](team)
+                input = cmd.split(", ")
+                cmd = cmd.split(" ")[0]
+                input[0] = cmd.split(" ")[1]
+                self.team[cmd](team, input)
             except KeyError:
                 print("That is not a valid command.")
         self.main()
