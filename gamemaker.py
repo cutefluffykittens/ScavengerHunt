@@ -69,4 +69,4 @@ class GameMaker:
         return return_value
 
     def display_menu(self):
-        return "Options\n\ndisplaystatus\naddlandmark [clue] [question] [answer]\ndisplaylandmarks\nremovelandmark [position in landmark list]\nlogout\n"
+        return "Options\n\ndisplaystatus\naddlandmark [name], [clue], [question], [answer]\ndisplaylandmarks\nremovelandmark [name]\nlogout\n"
