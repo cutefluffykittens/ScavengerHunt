@@ -22,9 +22,9 @@ class Escavenge():
             "logout": lambda team: team.logout(),
             "displaystatus": lambda team: print(team.display_status()),
             "help": lambda team: print(team.display_menu()),
-            "editusername" : lambda team, input: print(team.edit_username(input)),
-            "editpassword" : lambda team, input: print(team.edit_password(input)),
-            "answer" : lambda team, input: print(team.answer_question(input))
+            "editusername" : lambda team, params: print(team.edit_username(params)),
+            "editpassword" : lambda team, params: print(team.edit_password(params)),
+            "answer" : lambda team, params: print(team.answer_question(params))
         }
 
         # Hard-coding this for now until we have this functionality:
