@@ -86,22 +86,22 @@ class TestTeamAnswerQuestions(unittest.TestCase):
         self.landmark2 = landmark.Landmark("landmark2","clue2","q2","a2")
     def test_answer_no_team_logged_in(self):
         self.database.add_to_path(self.landmark1)
-        self.assertEqual("Cannot answer question when not logged in!",self.team1.answer_question("a1"),
+        self.assertEqual("Cannot answer question when not logged in!",self.team1.answer_question(["a1"]),
                          "Error: cannot answer a question when not logged in")
     def test_answer_wrong_team_logged_in(self):
         self.team1.login("teamname1","password1")
         self.database.add_to_path(self.landmark1)
-        self.assertEqual("Cannot answer question when not logged in!",self.team2.answer_question("a1"),
+        self.assertEqual("Cannot answer question when not logged in!",self.team2.answer_question(["a1"]),
                          "Error: a team that is not the current user cannot answer the question")
     def test_answer_no_landmarks_added(self):
         self.team1.login("teamname1","password1")
-        self.assertEqual("Not at a valid landmark",self.team1.answer_question("a1"),
+        self.assertEqual("Not at a valid landmark",self.team1.answer_question(["a1"]),
                          "Error: cannot answer a question when there are no landmarks")
     def test_correct_one_landmark(self):
         self.team1.login("teamname1","password1")
         self.database.add_to_path(self.landmark1)
         self.assertEqual("Correct answer given! You can now request the clue for the next landmark",
-                         self.team1.answer_question("a1"),
+                         self.team1.answer_question(["a1"]),
                          "Error: should have returned True when answered correctly (one landmark)")
         self.assertEqual(1,self.team1.current_landmark,
                          "Error: current landmark was not updated from 0 to 1 when answer was correct")
@@ -109,7 +109,7 @@ class TestTeamAnswerQuestions(unittest.TestCase):
         self.team1.login("teamname1","password1")
         self.database.add_to_path(self.landmark1)
         self.assertEqual("Incorrect answer, please try again",
-                         self.team1.answer_question("wrong answer"),
+                         self.team1.answer_question(["wrong answer"]),
                          "Error: should have returned False when answered incorrectly")
         self.assertEqual(0,self.team1.current_landmark,
                          "Error: current landmark should remain 0 when answer was incorrect")
@@ -117,9 +117,9 @@ class TestTeamAnswerQuestions(unittest.TestCase):
         self.team1.login("teamname1","password1")
         self.database.add_to_path(self.landmark1)
         self.database.add_to_path(self.landmark2)
-        self.team1.answer_question("a1")
+        self.team1.answer_question(["a1"])
         self.assertEqual("Correct answer given! You can now request the clue for the next landmark",
-                        self.team1.answer_question("a2"),
+                        self.team1.answer_question(["a2"]),
                         "Error: should have returned True when answered correctly (two landmarks)")
         self.assertEqual(2,self.team1.current_landmark,
                          "Error: current landmark was not updated from 1 to 2 when answer was correct")

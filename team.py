@@ -44,7 +44,8 @@ class Team():
         ret = "Password successfully changed to " + password
         return ret
 
-    def answer_question(self, user_answer):
+    def answer_question(self, input):
+        user_answer = input[0]
         if self.database.get_current_user() is not self:
             return "Cannot answer question when not logged in!"
         landmarks = self.database.get_landmark_path()
