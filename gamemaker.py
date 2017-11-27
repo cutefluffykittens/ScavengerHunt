@@ -67,7 +67,7 @@ class GameMaker:
             try:
                 time = int(input[1])
                 guess = int(input[2])
-                if time >= 0 and guess >= 0:
+                if time > 0 and guess > 0:
                     self.database.set_time_penalty(time)
                     self.database.set_guess_penalty(guess)
                     ret_string = "Time penalty is " + input[1] + " minutes and guess penalty is " + input[2] + " guesses"
