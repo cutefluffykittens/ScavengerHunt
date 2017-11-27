@@ -9,13 +9,13 @@ class Escavenge():
         self.game_maker = gamemaker.GameMaker(self.database)
 
         self.maker = {
-            "logout": lambda: self.game_maker.logout(),
-            "login": lambda: self.main,
-            "displaystatus": lambda: print(self.game_maker.display_status()),
-            "help": lambda: print(self.game_maker.display_menu()),
-            "addlandmark": lambda input: self.game_maker.add_landmark(input),
-            "displaylandmark": lambda: self.game_maker.display_landmarks(),
-            "removelandmark": lambda input: self.game_maker.remove_landmark(input)
+            "logout": lambda params: self.game_maker.logout(),
+            "login": lambda params: self.main,
+            "displaystatus": lambda params: print(self.game_maker.display_status()),
+            "help": lambda params: print(self.game_maker.display_menu()),
+            "addlandmark": lambda params: print(self.game_maker.add_landmark(params)),
+            "displaylandmarks": lambda params: print(self.game_maker.display_landmarks()),
+            "removelandmark": lambda params: print(self.game_maker.remove_landmark(params))
         }
 
         self.team = {
@@ -49,10 +49,11 @@ class Escavenge():
             cmd = input("What would you like to do (type \"help\" to display menu): ")
             try:
                 cmd = cmd.lower()
-                input = cmd.split(", ")
+                params = cmd.split(", ")
                 cmd = cmd.split(" ")[0]
-                input[0] = cmd.split(" ")[1]
-                self.maker[cmd](input)
+                if len(params[0].split(" ")) > 1:
+                    params[0] = cmd.split(" ")[1]
+                self.maker[cmd](params)
             except KeyError:
                 print("That is not a valid command.")
         self.main()
@@ -64,10 +65,11 @@ class Escavenge():
             cmd = input("What would you like to do (type \"help\" to display menu): ")
             try:
                 cmd = cmd.lower()
-                input = cmd.split(", ")
+                params = cmd.split(", ")
                 cmd = cmd.split(" ")[0]
-                input[0] = cmd.split(" ")[1]
-                self.team[cmd](team, input)
+                if len(params[0].split(" ")) > 1:
+                    params[0] = cmd.split(" ")[1]
+                self.team[cmd](team, params)
             except KeyError:
                 print("That is not a valid command.")
         self.main()

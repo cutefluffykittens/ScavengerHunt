@@ -124,6 +124,7 @@ class TestTeamAnswerQuestions(unittest.TestCase):
         self.assertEqual(2,self.team1.current_landmark,
                          "Error: current landmark was not updated from 1 to 2 when answer was correct")
 
+
 suite = unittest.TestSuite()
 suite.addTest(unittest.makeSuite(TestTeamLogin))
 suite.addTest(unittest.makeSuite(TestTeamLogout))
