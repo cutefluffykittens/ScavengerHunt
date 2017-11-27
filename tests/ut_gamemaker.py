@@ -195,7 +195,7 @@ class TestMakerSetPenalties(unittest.TestCase):
         self.assertEqual(self.database.get_guess_penalty(), 3, "Guess penalty not correct!")
 
     def test_invalid_not_ints(self):
-        self.assertEqual(self.maker1.set_penalties(["setpenalties", "a", "b"]), "Invalid input! Need integers greater than 0",
+        self.assertEqual(self.maker1.set_penalties(["setpenalties", "a", "b"]), "Invalid input! Need integers",
                          "Invalid penalties set!")
         self.assertEqual(self.database.get_time_penalty(), -1, "Time penalty not correct!")
         self.assertEqual(self.database.get_guess_penalty(), -1, "Guess penalty not correct!")

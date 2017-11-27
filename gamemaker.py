@@ -63,20 +63,18 @@ class GameMaker:
         return ret_string
 
     def set_penalties(self, input):
-        exception = False
         if len(input) == 3:
             try:
                 time = int(input[1])
                 guess = int(input[2])
+                if time >= 0 and guess >= 0:
+                    self.database.set_time_penalty(time)
+                    self.database.set_guess_penalty(guess)
+                    ret_string = "Time penalty is " + input[1] + " minutes and guess penalty is " + input[2] + " guesses"
+                else:
+                    ret_string = "Invalid input! Need integers greater than 0"
             except ValueError:
-                ret_string = "Invalid input! Need an integer."
-                exception = True
-            if not exception and time > 0 and guess > 0:
-                self.database.set_time_penalty(time)
-                self.database.set_guess_penalty(guess)
-                ret_string = "Time penalty is " + input[1] + " minutes and guess penalty is " + input[2] + " guesses"
-            elif not exception:
-                ret_string = "Invalid input! Need integers greater than 0"
+                ret_string = "Invalid input! Need integers"
         else:
             ret_string = "Bad spacing! Need one space between time penalty and guess penalty"
         return ret_string
