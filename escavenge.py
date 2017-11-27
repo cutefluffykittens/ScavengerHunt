@@ -19,9 +19,9 @@ class Escavenge():
         }
 
         self.team = {
-            "logout": lambda team: team.logout(),
-            "displaystatus": lambda team: print(team.display_status()),
-            "help": lambda team: print(team.display_menu()),
+            "logout": lambda team, params: team.logout(),
+            "displaystatus": lambda team, params: print(team.display_status()),
+            "help": lambda team, params: print(team.display_menu()),
             "editusername" : lambda team, params: print(team.edit_username(params)),
             "editpassword" : lambda team, params: print(team.edit_password(params)),
             "answer" : lambda team, params: print(team.answer_question(params))
@@ -52,7 +52,7 @@ class Escavenge():
                 params = cmd.split(", ")
                 cmd = cmd.split(" ")[0]
                 if len(params[0].split(" ")) > 1:
-                    params[0] = cmd.split(" ")[1]
+                    params[0] = params[0].split(" ")[1]
                 self.maker[cmd](params)
             except KeyError:
                 print("That is not a valid command.")
@@ -68,7 +68,7 @@ class Escavenge():
                 params = cmd.split(", ")
                 cmd = cmd.split(" ")[0]
                 if len(params[0].split(" ")) > 1:
-                    params[0] = cmd.split(" ")[1]
+                    params[0] = params[0].split(" ")[1]
                 self.team[cmd](team, params)
             except KeyError:
                 print("That is not a valid command.")
