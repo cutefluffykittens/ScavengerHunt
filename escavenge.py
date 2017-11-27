@@ -51,8 +51,8 @@ class Escavenge():
                 cmd = cmd.lower()
                 params = cmd.split(", ")
                 cmd = cmd.split(" ")[0]
-                if len(params[0].split(" ")) > 1:
-                    params[0] = params[0].split(" ")[1]
+                if len(cmd.split(" ")) > 1:
+                    params[0] = cmd.split(" ")[1]
                 self.maker[cmd](params)
             except KeyError:
                 print("That is not a valid command.")
@@ -67,8 +67,8 @@ class Escavenge():
                 cmd = cmd.lower()
                 params = cmd.split(", ")
                 cmd = cmd.split(" ")[0]
-                if len(params[0].split(" ")) > 1:
-                    params[0] = params[0].split(" ")[1]
+                if len(cmd.split(" ")) > 1:
+                    params[0] = cmd.split(" ")[1]
                 self.team[cmd](team, params)
             except KeyError:
                 print("That is not a valid command.")
