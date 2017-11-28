@@ -13,15 +13,21 @@ class Escavenge():
             "login": lambda: self.main,
             "displaystatus": lambda: print(self.game_maker.display_status()),
             "help": lambda: print(self.game_maker.display_menu()),
-            "maketeam": lambda: self.game_maker.make_team(input),
-            "editteam": lambda: self.game_maker.edit_team(input),
-            "setpenalties": lambda: self.game_maker.set_penalties(input),
+            "maketeam": lambda: self.game_maker.make_team(params),
+            "editteam": lambda: self.game_maker.edit_team(params),
+            "setpenalties": lambda: self.game_maker.set_penalties(params),
+            "addlandmark": lambda params: print(self.game_maker.add_landmark(params)),
+            "displaylandmarks": lambda params: print(self.game_maker.display_landmarks()),
+            "removelandmark": lambda params: print(self.game_maker.remove_landmark(params))
         }
 
         self.team = {
             "logout": lambda team: team.logout(),
             "displaystatus": lambda team: print(team.display_status()),
-            "help": lambda team: print(team.display_menu())
+            "help": lambda team: print(team.display_menu()),
+            "editusername" : lambda team, params: print(team.edit_username(params)),
+            "editpassword" : lambda team, params: print(team.edit_password(params)),
+            "answer" : lambda team, params: print(team.answer_question(params))
         }
 
         # Hard-coding this for now until we have this functionality:
@@ -46,10 +52,11 @@ class Escavenge():
             cmd = input("What would you like to do (type \"help\" to display menu): ")
             try:
                 cmd = cmd.lower()
-                input = cmd.split(", ")
+                params = cmd.split(", ")
                 cmd = cmd.split(" ")[0]
-                input[0] = cmd.split(" ")[1]
-                self.maker[cmd](input)
+                if len(cmd.split(" ")) > 1:
+                    params[0] = cmd.split(" ")[1]
+                self.maker[cmd](params)
             except KeyError:
                 print("That is not a valid command.")
         self.main()
@@ -61,10 +68,11 @@ class Escavenge():
             cmd = input("What would you like to do (type \"help\" to display menu): ")
             try:
                 cmd = cmd.lower()
-                input = cmd.split(", ")
+                params = cmd.split(", ")
                 cmd = cmd.split(" ")[0]
-                input[0] = cmd.split(" ")[1]
-                self.team[cmd](team, input)
+                if len(cmd.split(" ")) > 1:
+                    params[0] = cmd.split(" ")[1]
+                self.team[cmd](team, params)
             except KeyError:
                 print("That is not a valid command.")
         self.main()
@@ -73,7 +81,7 @@ class Escavenge():
 
         print("Welcome to Escavenge!\n")
 
-        while (True):
+        while True:
 
             username = input("Please enter your username: ")
             password = input("Please enter your password: ")

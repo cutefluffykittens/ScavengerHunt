@@ -24,12 +24,13 @@ class Database:
     def add_landmark(self, landmark):
         self.landmarks.append(landmark)
 
-    def delete_landmark(self, landmark):
+    def remove_landmark(self, landmark):
         try:
             self.landmarks.remove(landmark)
+            return True
 
         except ValueError:
-            pass
+            return False
 
     def get_landmarks(self):
         return self.landmarks
