@@ -23,7 +23,8 @@ class Escavenge():
             "displaystatus": lambda team, params: print(team.display_status()),
             "help": lambda team, params: print(team.display_menu()),
             "editusername" : lambda team, params: print(team.edit_username(params)),
-            "editpassword" : lambda team, params: print(team.edit_password(params))
+            "editpassword" : lambda team, params: print(team.edit_password(params)),
+            "answer" : lambda team, params: print(team.answer_question(params))
         }
 
         # Hard-coding this for now until we have this functionality:
@@ -32,7 +33,7 @@ class Escavenge():
         self.database.add_team(team.Team("team2", "password2", self.database))
 
     def login(self, username, password):
-        if (username == "maker"):
+        if username == "maker":
             return self.game_maker.login(username, password)
         else:
             teams = self.database.get_teams()
@@ -44,14 +45,14 @@ class Escavenge():
 
     def maker_cmd(self):
         cmd = None
-        while(cmd != "logout"):
+        while cmd != "logout":
             cmd = input("What would you like to do (type \"help\" to display menu): ")
             try:
                 cmd = cmd.lower()
                 params = cmd.split(", ")
                 cmd = cmd.split(" ")[0]
-                if len(params[0].split(" ")) > 1:
-                    params[0] = params[0].split(" ")[1]
+                if len(cmd.split(" ")) > 1:
+                    params[0] = cmd.split(" ")[1]
                 self.maker[cmd](params)
             except KeyError:
                 print("That is not a valid command.")
@@ -77,7 +78,7 @@ class Escavenge():
 
         print("Welcome to Escavenge!\n")
 
-        while (True):
+        while True:
 
             username = input("Please enter your username: ")
             password = input("Please enter your password: ")

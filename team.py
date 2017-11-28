@@ -1,5 +1,6 @@
 #import int_user
 import database
+import landmark
 
 #class Team(int_user.User):
 class Team():
@@ -7,6 +8,7 @@ class Team():
         self.username = username
         self.password = password
         self.database = database
+        self.current_landmark = 0
     def login(self,username,password):
         if self.database.get_current_user() != None:
             return False
@@ -20,7 +22,7 @@ class Team():
         self.database.set_current_user(None)
         return True
     def display_menu(self):
-        return "Options\n\nlog out\ndisplay status\nedit username\nedit password\n"
+        return "Options\n\nlog out\ndisplay status\nedit username\nedit password\nanswer\n"
 
     def display_status(self):
         return "Team: " + self.username
@@ -41,3 +43,20 @@ class Team():
         self.password = password
         ret = "Password successfully changed to " + password
         return ret
+
+    def answer_question(self, input):
+        user_answer = input[0]
+        if self.database.get_current_user() is not self:
+            return "Cannot answer question when not logged in!"
+        landmarks = self.database.get_landmark_path()
+        try:
+            check_landmark = landmarks[self.current_landmark]
+        except IndexError:
+            return "Not at a valid landmark"
+        ret_string = ""
+        if check_landmark.verify_answer(user_answer):
+            self.current_landmark += 1
+            ret_string = "Correct answer given! You can now request the clue for the next landmark"
+        else:
+            ret_string = "Incorrect answer, please try again"
+        return ret_string
