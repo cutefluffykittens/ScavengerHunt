@@ -252,6 +252,60 @@ class TestMakerLandmark(unittest.TestCase):
     def test_remove_landmark_incorrect(self):
         self.assertEqual(self.maker1.remove_landmark([self.input1[0]]), "Couldn't find landmark with name " + self.input1[0], "test_remove_landmark_incorrect: Shouldn't have deleted")
 
+class TestStartGame(unittest.TestCase):
+    def setUp(self):
+        self.database = database.Database()
+        self.maker1 = gamemaker.GameMaker(self.database)
+        self.team1 = team.Team("username1","password1",self.database)
+        self.landmark1 = landmark.Landmark("l1","c1","q1","a1")
+    def test_initial_value(self):
+        self.assertFalse(self.database.game_running,"Error: game_started should be initialized to False")
+    def test_start_game_no_one_logged_in(self):
+        self.assertEqual("Game can only be started by Gamemaker",self.maker1.start_game(),
+                         "Error: can't start a game when not logged in")
+        self.assertFalse(self.database.game_running,"Error: game_started should remain False")
+    def test_start_game_team_logged_in(self):
+        self.team1.login("username1","password1")
+        self.assertEqual("Game can only be started by Gamemaker",self.maker1.start_game(),
+                         "Error: can't start a game when not logged in")
+        self.assertFalse(self.database.game_running,"Error: game_started should remain False")
+    def test_start_game_no_landmarks(self):
+        self.maker1.login("maker","password")
+        self.assertEqual("Can't start when there are no landmarks in the game!",self.maker1.start_game(),
+                         "Error: game shouldn't start when there are no landmarks in the game")
+        self.assertFalse(self.database.game_running,
+                         "Error: game_started should remain False when there are no landmarks in the game")
+    def test_start_game_valid(self):
+        self.maker1.login("maker","password")
+        self.database.add_to_path(self.landmark1)
+        self.assertEqual("Game started!",self.maker1.start_game(),
+                         "Error: game should have been started when Gamemaker calls start_game()")
+        self.assertTrue(self.database.game_running,"Error: game_started should have been True")
+
+class TestMakerEndGame(unittest.TestCase):
+    def setUp(self):
+        self.database = database.Database()
+        self.maker1 = gamemaker.GameMaker(self.database)
+        self.team1 = team.Team("username1","password1",self.database)
+        self.landmark1 = landmark.Landmark("l1","c1","q1","a1")
+    def test_end_game_no_one_logged_in(self):
+        self.assertEqual("Can't prematurely end game when Gamemaker is not logged in",self.maker1.end_game(),
+                         "Error: when no one is logged in, end_game() cannot be executed")
+    def test_end_game_team_logged_in(self):
+        self.team1.login("username1","password1")
+        self.assertEqual("Can't prematurely end game when Gamemaker is not logged in",self.maker1.end_game(),
+                         "Error: when a team is logged in, end_game() cannot be executed")
+    def test_end_game_no_game_started(self):
+        self.maker1.login("maker","password")
+        self.assertEqual("Can't end the game if it hasn't started yet",self.maker1.end_game(),
+                         "Error: game can't be ended if it hasn't even begun")
+    def test_end_game_valid(self):
+        self.maker1.login("maker","password")
+        self.database.add_to_path(self.landmark1)
+        self.maker1.start_game()
+        self.assertEqual("Game over",self.maker1.end_game(),"Error: game wasn't ended properly by Gamemaker")
+        self.assertFalse(self.database.game_running)
+
 suite = unittest.TestSuite()
 suite.addTest(unittest.makeSuite(TestMakerLogin))
 suite.addTest(unittest.makeSuite(TestMakerLogout))
@@ -259,6 +313,8 @@ suite.addTest(unittest.makeSuite(TestMakerCheckStatus))
 suite.addTest(unittest.makeSuite(TestMakerCreateTeam))
 suite.addTest(unittest.makeSuite(TestMakerEditTeams))
 suite.addTest(unittest.makeSuite(TestMakerSetPenalties))
+suite.addTest(unittest.makeSuite(TestStartGame))
+suite.addTest(unittest.makeSuite(TestMakerEndGame))
 
 runner = unittest.TextTestRunner()
 res=runner.run(suite)

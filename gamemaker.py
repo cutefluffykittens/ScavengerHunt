@@ -116,3 +116,20 @@ class GameMaker:
         else:
             ret_string = "Bad spacing! Need one space between time penalty and guess penalty"
         return ret_string
+
+
+    def start_game(self):
+        if self.database.get_current_user() is not self:
+            return "Game can only be started by Gamemaker"
+        if len(self.database.get_landmark_path()) == 0:
+            return "Can't start when there are no landmarks in the game!"
+        self.database.game_running = True
+        return "Game started!"
+
+    def end_game(self):
+        if self.database.get_current_user() is not self:
+            return "Can't prematurely end game when Gamemaker is not logged in"
+        if not self.database.game_running:
+            return "Can't end the game if it hasn't started yet"
+        self.database.game_running = False
+        return "Game over"

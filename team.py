@@ -48,15 +48,18 @@ class Team():
         user_answer = input[0]
         if self.database.get_current_user() is not self:
             return "Cannot answer question when not logged in!"
+        if not self.database.game_running:
+            return "There is no current game to answer a question for"
         landmarks = self.database.get_landmark_path()
         try:
             check_landmark = landmarks[self.current_landmark]
         except IndexError:
             return "Not at a valid landmark"
-        ret_string = ""
         if check_landmark.verify_answer(user_answer):
             self.current_landmark += 1
-            ret_string = "Correct answer given! You can now request the clue for the next landmark"
+            if self.current_landmark == len(landmarks):
+                self.database.game_running = False
+                return "Congratulations! Your team has won the game!"
+            return "Correct answer given! You can now request the clue for the next landmark"
         else:
-            ret_string = "Incorrect answer, please try again"
-        return ret_string
+            return "Incorrect answer, please try again"
