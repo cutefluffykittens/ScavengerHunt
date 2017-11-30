@@ -71,7 +71,7 @@ class GameMaker:
 
     def display_menu(self):
         return "Options\n\ndisplaystatus\nmaketeam [team name] [team password]\neditteam [team name to edit] [new team name] [new team password]\n" \
-        "addlandmark [name], [clue], [question], [answer]\ndisplaylandmarks\nremovelandmark [name]\nlogout\n"
+        "deleteteam [team name to delete]]\n addlandmark [name], [clue], [question], [answer]\ndisplaylandmarks\nremovelandmark [name]\nlogout\n"
 
     def make_team(self, input):
         if len(input) == 3:
