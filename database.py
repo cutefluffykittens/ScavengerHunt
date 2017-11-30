@@ -2,7 +2,7 @@ class Database:
     def __init__(self):
         self.team_list = []
         self.landmarks = []
-        self.landmark_path = []
+        self.game = []
         self.guess_penalty = -1
         self.time_penalty = -1
         self.current_user = None
@@ -35,18 +35,24 @@ class Database:
     def get_landmarks(self):
         return self.landmarks
 
-    def add_to_path(self, landmark):
-        self.landmark_path.append(landmark)
+    def add_to_game(self, landmark):
+        if not game_is_running:
+            self.game.append(landmark)
+        else:
+            return "Cannot add a landmark when the game is running!"
 
-    def delete_from_path(self, landmark):
-        try:
-            self.landmark_path.remove(landmark)
 
-        except ValueError:
-            pass
+    def delete_from_game(self, landmark):
+        if not game_is_running:
+            try:
+                self.landmark_path.remove(landmark)
 
-    def get_landmark_path(self):
-        return self.landmark_path
+            except ValueError:
+                pass
+        else:
+            return "Cannot delete a landmark when the game is running!"
+    def get_game(self):
+        return self.game
 
     def set_guess_penalty(self, penalty):
         self.guess_penalty = penalty

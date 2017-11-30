@@ -116,3 +116,14 @@ class GameMaker:
         else:
             ret_string = "Bad spacing! Need one space between time penalty and guess penalty"
         return ret_string
+
+    def create_game(self):
+        if not self.database.game_is_running and self.database.game == []:
+            all_landmarks = self.database.get_landmarks
+            for landmark in all_landmarks:
+                self.database.add_to_game(self, landmark)
+            return self.database.get_game()
+        elif self.database.game_is_running:
+            return "Cannot create a game when one is already running!"
+        else:
+            return "Cannot create a game when there are no landmarks!"

@@ -252,6 +252,27 @@ class TestMakerLandmark(unittest.TestCase):
     def test_remove_landmark_incorrect(self):
         self.assertEqual(self.maker1.remove_landmark([self.input1[0]]), "Couldn't find landmark with name " + self.input1[0], "test_remove_landmark_incorrect: Shouldn't have deleted")
 
+class TestMakerCreateGame(unittest.TestCase):
+    def setUp(self):
+        self.database = database.Database()
+        self.maker1 = gamemaker.GameMaker(self.database)
+        self.input1 = ["name1", "clue1", "question1", "answer1"]
+        self.input2 = ["name2", "clue2", "question2", "answer2"]
+
+    def test_create_game_no_landmarks(self):
+        self.assertEqual(self.maker1.create_game(self), "Cannot create a game when there are no landmarks!",
+                         "Created game with no landmarks")
+
+    def test_create_game_when_running(self):
+        self.database.game_is_running = True
+        self.assertEqual(self.maker1.create_game(self), "Cannot create a game when one is already running!", "Created game with one running")
+
+    def test_create_game_valid(self):
+        self.maker1.add_landmark(self.input1)
+        self.maker1.add_landmark(self.input2)
+        self.assertEqual(self.maker1.create_game(self),
+                         [["name1", "clue1", "question1", "answer1"],["name2", "clue2", "question2", "answer2"]], "Game not properly created!")
+
 suite = unittest.TestSuite()
 suite.addTest(unittest.makeSuite(TestMakerLogin))
 suite.addTest(unittest.makeSuite(TestMakerLogout))
@@ -259,6 +280,8 @@ suite.addTest(unittest.makeSuite(TestMakerCheckStatus))
 suite.addTest(unittest.makeSuite(TestMakerCreateTeam))
 suite.addTest(unittest.makeSuite(TestMakerEditTeams))
 suite.addTest(unittest.makeSuite(TestMakerSetPenalties))
+suite.addTest(unittest.makeSuite(TestMakerLandmark))
+suite.addTest(unittest.makeSuite(TestMakerCreateGame))
 
 runner = unittest.TextTestRunner()
 res=runner.run(suite)
