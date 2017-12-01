@@ -1,3 +1,5 @@
+import escavenge
 class Interface:
     def process(self, s, u):
-        return s
+        e = escavenge.Escavenge()
+        return e.main(s, u)
