@@ -23,7 +23,7 @@ class Team():
         self.database.set_current_user(None)
         return True
     def display_menu(self):
-        return "Options\n\nlog out\ndisplay status\nedit username\nedit password\nanswer\n"
+        return "Options\n\nlog out\ndisplay status\nedit username\nedit password\nanswer\nrequest clue\n"
 
     def display_status(self):
         landmark_string = "\n"
@@ -71,3 +71,14 @@ class Team():
         else:
             self.penalties += 1
             return "Incorrect answer, please try again"
+
+    def request_clue(self):
+        if self.database.get_current_user() is not self:
+            return "Cannot answer question when not logged in!"
+        landmarks = self.database.get_landmark_path()
+        try:
+            check_landmark = landmarks[self.current_landmark]
+        except IndexError:
+            return "Not at a valid landmark"
+        ret_string = "" + landmarks[self.current_landmark].clue
+        return ret_string
