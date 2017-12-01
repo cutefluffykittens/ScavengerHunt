@@ -71,7 +71,7 @@ class GameMaker:
 
     def display_menu(self):
         return "Options\n\ndisplaystatus\nmaketeam [team name] [team password]\neditteam [team name to edit] [new team name] [new team password]\n" \
-        "addlandmark [name], [clue], [question], [answer]\ndisplaylandmarks\nremovelandmark [name]\nlogout\n"
+        "deleteteam [team name to delete]]\n addlandmark [name], [clue], [question], [answer]\ndisplaylandmarks\nremovelandmark [name]\nlogout\n"
 
     def make_team(self, input):
         if len(input) == 3:
@@ -100,6 +100,28 @@ class GameMaker:
             ret_string = "Could not find that team!"
         return ret_string
 
+    def delete_team(self, input):
+        found = False
+        if len(input) == 2:
+            list = self.database.get_teams()
+            index = -1
+            for team in list:
+                ++index
+                if team.username == input[1]:
+                    try:
+                        found = True
+                        del list[index]
+                        ret_string = "" + input[1] +" has been deleted."
+                    except(ValueError):
+                        ret_string = "" + input[1] +" does not exist"
+
+        else:
+            ret_string = "Invalid input!"
+            found = True
+        if not found:
+            ret_string = "That team does not exist."
+        return ret_string
+
     def set_penalties(self, input):
         if len(input) == 3:
             try:
@@ -117,7 +139,6 @@ class GameMaker:
             ret_string = "Bad spacing! Need one space between time penalty and guess penalty"
         return ret_string
 
-
     def start_game(self):
         if self.database.get_current_user() is not self:
             return "Game can only be started by Gamemaker"
@@ -133,3 +154,4 @@ class GameMaker:
             return "Can't end the game if it hasn't started yet"
         self.database.game_running = False
         return "Game over"
+

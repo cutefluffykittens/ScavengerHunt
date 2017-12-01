@@ -1,0 +1,23 @@
+{% load staticfiles %}
+<link rel="stylesheet" type="text/css" href="{% static 'Interface/style.css' %}" />
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
+
+<div class="container"></div>
+    <h1 style="text-align: center; margin: 25px;">Login</h1>
+
+    <h5 style="text-align: center; margin: 25px; color: red;"> {{  message }} </h5>
+
+    <div class="row" style="margin: 0 auto; width: 30%;">
+        <form action="/validate/" method="POST">{% csrf_token %}
+            <div class="form-group">
+                <input class="form-control" type="text" placeholder="Username" id="huntUser" name="huntUser" />
+            </div>
+            <div class="form-group">
+                <input class="form-control" type="text" placeholder="Password" id="password" name="password" />
+            </div>
+            <div class="form-group">
+                <input class="btn btn-large btn-primary btn-block" type="submit" />
+            </div>
+        </form>
+    </div>
+</div>

@@ -72,7 +72,7 @@ class TestTeamCommands(unittest.TestCase):
         self.team1 = team.Team("teamname1","password1",self.database)
     def test_display_menu(self):
         self.team1.login("teamname1","password1")
-        self.assertEqual("Options\n\nlog out\ndisplay status\nedit username\nedit password\nanswer\n",
+        self.assertEqual("Options\n\nlog out\ndisplay status\nedit username\nedit password\nanswer\nrequest clue\n",
                          self.team1.display_menu(),"Error: incorrect menu displayed")
 
 class TestTeamAnswerQuestions(unittest.TestCase):
@@ -149,6 +149,34 @@ class TestTeamInitialization(unittest.TestCase):
     def test_initial_penalties(self):
         self.assertEqual(0,self.team1.penalties,"Error: penalties should be initialized to 0")
 
+class TestTeamRequestClue(unittest.TestCase):
+    def setUp(self):
+        self.database = database.Database()
+        self.team1 = team.Team("teamname1", "password1", self.database)
+        self.team2 = team.Team("teamname2", "password2", self.database)
+        self.database.add_team(self.team1)
+        self.database.add_team(self.team2)
+        self.landmark1 = landmark.Landmark("landmark1","clue1","q1","a1")
+        self.landmark2 = landmark.Landmark("landmark2","clue2","q2","a2")
+    def test_request_no_team_logged_in(self):
+        self.database.add_to_path(self.landmark1)
+        self.assertEqual("Cannot answer question when not logged in!",self.team1.request_clue(),
+                         "Error: cannot answer a question when not logged in")
+    def test_request_wrong_team_logged_in(self):
+        self.team1.login("teamname1","password1")
+        self.database.add_to_path(self.landmark1)
+        self.assertEqual("Cannot answer question when not logged in!",self.team2.request_clue(),
+                         "Error: a team that is not the current user cannot answer the question")
+    def test_request_no_landmarks_added(self):
+        self.team1.login("teamname1","password1")
+        self.assertEqual("Not at a valid landmark",self.team1.request_clue(),
+                         "Error: cannot answer a question when there are no landmarks")
+    def test_request_good(self):
+        self.team1.login("teamname1","password1")
+        self.database.add_to_path(self.landmark1)
+        self.assertEqual("clue1", self.team1.request_clue(),
+                         "Error: should have returned clue1")
+
 suite = unittest.TestSuite()
 suite.addTest(unittest.makeSuite(TestTeamLogin))
 suite.addTest(unittest.makeSuite(TestTeamLogout))
@@ -156,6 +184,7 @@ suite.addTest(unittest.makeSuite(TestTeamEditUsername))
 suite.addTest(unittest.makeSuite(TestTeamEditPassword))
 suite.addTest(unittest.makeSuite(TestTeamCommands))
 suite.addTest(unittest.makeSuite(TestTeamAnswerQuestions))
+suite.addTest(unittest.makeSuite(TestTeamRequestClue))
 
 runner = unittest.TextTestRunner()
 res=runner.run(suite)

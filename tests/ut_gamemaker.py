@@ -306,6 +306,51 @@ class TestMakerEndGame(unittest.TestCase):
         self.assertEqual("Game over",self.maker1.end_game(),"Error: game wasn't ended properly by Gamemaker")
         self.assertFalse(self.database.game_running)
 
+class TestMakerDeleteTeam(unittest.TestCase):
+    def setUp(self):
+        self.database = database.Database()
+        self.maker1 = gamemaker.GameMaker(self.database)
+
+    def test_delete_only_team(self):
+        self.database.add_team(team.Team("Team1", "password", self.database))
+        self.assertEqual(self.maker1.delete_team(["deleteteam", "Team1"]),
+                    "Team1 has been deleted.", "Valid edit failed")
+        self.assertEqual(self.database.get_teams(), [], "team was not deleted")
+        self.assertEqual(len(self.database.get_teams()), 0, "Team list length incorrect!")
+
+    def test_delete_team_front(self):
+        self.database.add_team(team.Team("Team1", "password", self.database))
+        self.database.add_team(team.Team("Team2", "password", self.database))
+        self.assertEqual(self.maker1.delete_team(["deleteteam", "Team1"]),
+                    "Team1 has been deleted.", "Valid edit failed")
+        team2 = self.database.get_teams()[0].username
+        self.assertEqual(team2, "Team2", "Team1 was not deleted")
+        self.assertEqual(len(self.database.get_teams()), 1, "Team list length incorrect!")
+
+    def test_delete_team_middle(self):
+        self.database.add_team(team.Team("Team1", "password", self.database))
+        self.database.add_team(team.Team("Team2", "password", self.database))
+        self.database.add_team(team.Team("Team3", "password", self.database))
+        self.assertEqual(self.maker1.delete_team(["deleteteam", "Team2"]),
+                    "Team2 has been deleted.", "Valid edit failed")
+        team1 = self.database.get_teams()[0].username
+        team3 = self.database.get_teams()[1].username
+        self.assertEqual(team1, "Team1", "Team2 was not deleted")
+        self.assertEqual(team3, "Team3", "Team2 was not deleted")
+        self.assertEqual(len(self.database.get_teams()), 2, "Team list length incorrect!")
+
+    def test_delete_team_end(self):
+        self.database.add_team(team.Team("Team1", "password", self.database))
+        self.database.add_team(team.Team("Team2", "password", self.database))
+        self.database.add_team(team.Team("Team3", "password", self.database))
+        self.assertEqual(self.maker1.delete_team(["deleteteam", "Team3"]),
+                    "Team3 has been deleted.", "Valid edit failed")
+        team1 = self.database.get_teams()[0].username
+        team2 = self.database.get_teams()[1].username
+        self.assertEqual(team1, "Team1", "Team1 was not deleted")
+        self.assertEqual(team2, "Team2", "Team2 was not deleted")
+        self.assertEqual(len(self.database.get_teams()), 2, "Team list length incorrect!")
+
 suite = unittest.TestSuite()
 suite.addTest(unittest.makeSuite(TestMakerLogin))
 suite.addTest(unittest.makeSuite(TestMakerLogout))
@@ -315,6 +360,9 @@ suite.addTest(unittest.makeSuite(TestMakerEditTeams))
 suite.addTest(unittest.makeSuite(TestMakerSetPenalties))
 suite.addTest(unittest.makeSuite(TestStartGame))
 suite.addTest(unittest.makeSuite(TestMakerEndGame))
+suite.addTest(unittest.makeSuite(TestMakerDeleteTeam))
+suite.addTest(unittest.makeSuite(TestMakerLandmark))
+
 
 runner = unittest.TextTestRunner()
 res=runner.run(suite)
