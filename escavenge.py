@@ -9,22 +9,24 @@ class Escavenge():
         self.game_maker = gamemaker.GameMaker(self.database)
 
         self.maker = {
-            "logout": lambda: self.game_maker.logout(),
-            "login": lambda: self.main,
-            "displaystatus": lambda: print(self.game_maker.display_status()),
-            "help": lambda: print(self.game_maker.display_menu()),
-            "maketeam": lambda: self.game_maker.make_team(params),
-            "editteam": lambda: self.game_maker.edit_team(params),
-            "setpenalties": lambda: self.game_maker.set_penalties(params),
+            "logout": lambda params: self.game_maker.logout(),
+            "login": lambda params: self.main,
+            "displaystatus": lambda params: print(self.game_maker.display_status()),
+            "help": lambda params: print(self.game_maker.display_menu()),
+            "maketeam": lambda params: self.game_maker.make_team(params),
+            "editteam": lambda params: self.game_maker.edit_team(params),
+            "setpenalties": lambda params: self.game_maker.set_penalties(params),
             "addlandmark": lambda params: print(self.game_maker.add_landmark(params)),
             "displaylandmarks": lambda params: print(self.game_maker.display_landmarks()),
-            "removelandmark": lambda params: print(self.game_maker.remove_landmark(params))
+            "removelandmark": lambda params: print(self.game_maker.remove_landmark(params)),
+            "startgame": lambda params: print(self.game_maker.start_game()),
+            "endgame": lambda params: print(self.game_maker.end_game())
         }
 
         self.team = {
-            "logout": lambda team: team.logout(),
-            "displaystatus": lambda team: print(team.display_status()),
-            "help": lambda team: print(team.display_menu()),
+            "logout": lambda team, params: team.logout(),
+            "displaystatus": lambda team, params: print(team.display_status()),
+            "help": lambda team, params: print(team.display_menu()),
             "editusername" : lambda team, params: print(team.edit_username(params)),
             "editpassword" : lambda team, params: print(team.edit_password(params)),
             "answer" : lambda team, params: print(team.answer_question(params))

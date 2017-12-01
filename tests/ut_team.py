@@ -95,34 +95,59 @@ class TestTeamAnswerQuestions(unittest.TestCase):
                          "Error: a team that is not the current user cannot answer the question")
     def test_answer_no_landmarks_added(self):
         self.team1.login("teamname1","password1")
+        self.database.game_running = True
         self.assertEqual("Not at a valid landmark",self.team1.answer_question(["a1"]),
                          "Error: cannot answer a question when there are no landmarks")
+    def test_answer_no_game_running(self):
+        self.team1.login("teamname1","password1")
+        self.database.add_to_path(self.landmark1)
+        self.assertEqual("There is no current game to answer a question for",self.team1.answer_question(["a1"]),
+                         "Error: can't answer a question when there isn't a current game")
     def test_correct_one_landmark(self):
         self.team1.login("teamname1","password1")
         self.database.add_to_path(self.landmark1)
+        self.database.add_to_path(self.landmark2)
+        self.database.game_running = True
         self.assertEqual("Correct answer given! You can now request the clue for the next landmark",
                          self.team1.answer_question(["a1"]),
-                         "Error: should have returned True when answered correctly (one landmark)")
-        self.assertEqual(1,self.team1.current_landmark,
-                         "Error: current landmark was not updated from 0 to 1 when answer was correct")
+                         "Error: should have returned True when answered correctly")
+        self.assertEqual(0,self.team1.current_landmark,
+                         "Error: current landmark was not updated from -1 to 0 when answer was correct")
     def test_incorrect(self):
         self.team1.login("teamname1","password1")
         self.database.add_to_path(self.landmark1)
+        self.database.game_running = True
         self.assertEqual("Incorrect answer, please try again",
                          self.team1.answer_question(["wrong answer"]),
                          "Error: should have returned False when answered incorrectly")
-        self.assertEqual(0,self.team1.current_landmark,
-                         "Error: current landmark should remain 0 when answer was incorrect")
-    def test_correct_two_landmarks(self):
+        self.assertEqual(-1,self.team1.current_landmark,
+                         "Error: current landmark should remain -1 when answer was incorrect")
+    def test_correct_end_game(self):
         self.team1.login("teamname1","password1")
         self.database.add_to_path(self.landmark1)
         self.database.add_to_path(self.landmark2)
+        self.database.game_running = True
         self.team1.answer_question(["a1"])
-        self.assertEqual("Correct answer given! You can now request the clue for the next landmark",
+        self.assertEqual("Congratulations! Your team has won the game!",
                         self.team1.answer_question(["a2"]),
-                        "Error: should have returned True when answered correctly (two landmarks)")
-        self.assertEqual(2,self.team1.current_landmark,
-                         "Error: current landmark was not updated from 1 to 2 when answer was correct")
+                        "Error: should have indicated that the team has won")
+        self.assertEqual(1,self.team1.current_landmark,
+                         "Error: current landmark was not updated from 0 to 1 when answer was correct")
+        self.assertFalse(self.database.game_running,
+                         "Error: game_running should be changed from True to False once a team has won")
+
+class TestTeamInitialization(unittest.TestCase):
+    def setUp(self):
+        self.database = database.Database()
+        self.team1 = team.Team("username1","password1",self.database)
+    def test_initial_username(self):
+        self.assertEqual("username1",self.team1.username,"Error: username not initialized correctly")
+    def test_initial_password(self):
+        self.assertEqual("password1",self.team1.password,"Error: password not initialized correctly")
+    def test_initial_landmark(self):
+        self.assertEqual(-1,self.team1.current_landmark,"Error: current landmark should be initialized to -1")
+    def test_initial_penalties(self):
+        self.assertEqual(0,self.team1.penalties,"Error: penalties should be initialized to 0")
 
 class TestTeamRequestClue(unittest.TestCase):
     def setUp(self):
