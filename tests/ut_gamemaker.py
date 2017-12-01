@@ -252,6 +252,105 @@ class TestMakerLandmark(unittest.TestCase):
     def test_remove_landmark_incorrect(self):
         self.assertEqual(self.maker1.remove_landmark([self.input1[0]]), "Couldn't find landmark with name " + self.input1[0], "test_remove_landmark_incorrect: Shouldn't have deleted")
 
+class TestStartGame(unittest.TestCase):
+    def setUp(self):
+        self.database = database.Database()
+        self.maker1 = gamemaker.GameMaker(self.database)
+        self.team1 = team.Team("username1","password1",self.database)
+        self.landmark1 = landmark.Landmark("l1","c1","q1","a1")
+    def test_initial_value(self):
+        self.assertFalse(self.database.game_running,"Error: game_started should be initialized to False")
+    def test_start_game_no_one_logged_in(self):
+        self.assertEqual("Game can only be started by Gamemaker",self.maker1.start_game(),
+                         "Error: can't start a game when not logged in")
+        self.assertFalse(self.database.game_running,"Error: game_started should remain False")
+    def test_start_game_team_logged_in(self):
+        self.team1.login("username1","password1")
+        self.assertEqual("Game can only be started by Gamemaker",self.maker1.start_game(),
+                         "Error: can't start a game when not logged in")
+        self.assertFalse(self.database.game_running,"Error: game_started should remain False")
+    def test_start_game_no_landmarks(self):
+        self.maker1.login("maker","password")
+        self.assertEqual("Can't start when there are no landmarks in the game!",self.maker1.start_game(),
+                         "Error: game shouldn't start when there are no landmarks in the game")
+        self.assertFalse(self.database.game_running,
+                         "Error: game_started should remain False when there are no landmarks in the game")
+    def test_start_game_valid(self):
+        self.maker1.login("maker","password")
+        self.database.add_to_path(self.landmark1)
+        self.assertEqual("Game started!",self.maker1.start_game(),
+                         "Error: game should have been started when Gamemaker calls start_game()")
+        self.assertTrue(self.database.game_running,"Error: game_started should have been True")
+
+class TestMakerEndGame(unittest.TestCase):
+    def setUp(self):
+        self.database = database.Database()
+        self.maker1 = gamemaker.GameMaker(self.database)
+        self.team1 = team.Team("username1","password1",self.database)
+        self.landmark1 = landmark.Landmark("l1","c1","q1","a1")
+    def test_end_game_no_one_logged_in(self):
+        self.assertEqual("Can't prematurely end game when Gamemaker is not logged in",self.maker1.end_game(),
+                         "Error: when no one is logged in, end_game() cannot be executed")
+    def test_end_game_team_logged_in(self):
+        self.team1.login("username1","password1")
+        self.assertEqual("Can't prematurely end game when Gamemaker is not logged in",self.maker1.end_game(),
+                         "Error: when a team is logged in, end_game() cannot be executed")
+    def test_end_game_no_game_started(self):
+        self.maker1.login("maker","password")
+        self.assertEqual("Can't end the game if it hasn't started yet",self.maker1.end_game(),
+                         "Error: game can't be ended if it hasn't even begun")
+    def test_end_game_valid(self):
+        self.maker1.login("maker","password")
+        self.database.add_to_path(self.landmark1)
+        self.maker1.start_game()
+        self.assertEqual("Game over",self.maker1.end_game(),"Error: game wasn't ended properly by Gamemaker")
+        self.assertFalse(self.database.game_running)
+
+class TestMakerDeleteTeam(unittest.TestCase):
+    def setUp(self):
+        self.database = database.Database()
+        self.maker1 = gamemaker.GameMaker(self.database)
+
+    def test_delete_only_team(self):
+        self.database.add_team(team.Team("Team1", "password", self.database))
+        self.assertEqual(self.maker1.delete_team(["deleteteam", "Team1"]),
+                    "Team1 has been deleted.", "Valid edit failed")
+        self.assertEqual(self.database.get_teams(), [], "team was not deleted")
+        self.assertEqual(len(self.database.get_teams()), 0, "Team list length incorrect!")
+
+    def test_delete_team_front(self):
+        self.database.add_team(team.Team("Team1", "password", self.database))
+        self.database.add_team(team.Team("Team2", "password", self.database))
+        self.assertEqual(self.maker1.delete_team(["deleteteam", "Team1"]),
+                    "Team1 has been deleted.", "Valid edit failed")
+        team2 = self.database.get_teams()[0].username
+        self.assertEqual(team2, "Team2", "Team1 was not deleted")
+        self.assertEqual(len(self.database.get_teams()), 1, "Team list length incorrect!")
+
+    def test_delete_team_middle(self):
+        self.database.add_team(team.Team("Team1", "password", self.database))
+        self.database.add_team(team.Team("Team2", "password", self.database))
+        self.database.add_team(team.Team("Team3", "password", self.database))
+        self.assertEqual(self.maker1.delete_team(["deleteteam", "Team2"]),
+                    "Team2 has been deleted.", "Valid edit failed")
+        team1 = self.database.get_teams()[0].username
+        team3 = self.database.get_teams()[1].username
+        self.assertEqual(team1, "Team1", "Team2 was not deleted")
+        self.assertEqual(team3, "Team3", "Team2 was not deleted")
+        self.assertEqual(len(self.database.get_teams()), 2, "Team list length incorrect!")
+
+    def test_delete_team_end(self):
+        self.database.add_team(team.Team("Team1", "password", self.database))
+        self.database.add_team(team.Team("Team2", "password", self.database))
+        self.database.add_team(team.Team("Team3", "password", self.database))
+        self.assertEqual(self.maker1.delete_team(["deleteteam", "Team3"]),
+                    "Team3 has been deleted.", "Valid edit failed")
+        team1 = self.database.get_teams()[0].username
+        team2 = self.database.get_teams()[1].username
+        self.assertEqual(team1, "Team1", "Team1 was not deleted")
+        self.assertEqual(team2, "Team2", "Team2 was not deleted")
+        self.assertEqual(len(self.database.get_teams()), 2, "Team list length incorrect!")
+
 suite = unittest.TestSuite()
 suite.addTest(unittest.makeSuite(TestMakerLogin))
 suite.addTest(unittest.makeSuite(TestMakerLogout))
@@ -259,6 +358,11 @@ suite.addTest(unittest.makeSuite(TestMakerCheckStatus))
 suite.addTest(unittest.makeSuite(TestMakerCreateTeam))
 suite.addTest(unittest.makeSuite(TestMakerEditTeams))
 suite.addTest(unittest.makeSuite(TestMakerSetPenalties))
+suite.addTest(unittest.makeSuite(TestStartGame))
+suite.addTest(unittest.makeSuite(TestMakerEndGame))
+suite.addTest(unittest.makeSuite(TestMakerDeleteTeam))
+suite.addTest(unittest.makeSuite(TestMakerLandmark))
+
 
 runner = unittest.TextTestRunner()
 res=runner.run(suite)
