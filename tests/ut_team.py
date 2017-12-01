@@ -136,6 +136,19 @@ class TestTeamAnswerQuestions(unittest.TestCase):
         self.assertFalse(self.database.game_running,
                          "Error: game_running should be changed from True to False once a team has won")
 
+class TestTeamInitialization(unittest.TestCase):
+    def setUp(self):
+        self.database = database.Database()
+        self.team1 = team.Team("username1","password1",self.database)
+    def test_initial_username(self):
+        self.assertEqual("username1",self.team1.username,"Error: username not initialized correctly")
+    def test_initial_password(self):
+        self.assertEqual("password1",self.team1.password,"Error: password not initialized correctly")
+    def test_initial_landmark(self):
+        self.assertEqual(-1,self.team1.current_landmark,"Error: current landmark should be initialized to -1")
+    def test_initial_penalties(self):
+        self.assertEqual(0,self.team1.penalties,"Error: penalties should be initialized to 0")
+
 class TestTeamRequestClue(unittest.TestCase):
     def setUp(self):
         self.database = database.Database()
@@ -163,6 +176,7 @@ class TestTeamRequestClue(unittest.TestCase):
         self.database.add_to_path(self.landmark1)
         self.assertEqual("clue1", self.team1.request_clue(),
                          "Error: should have returned clue1")
+
 class TestTeamInitialization(unittest.TestCase):
     def setUp(self):
         self.database = database.Database()
