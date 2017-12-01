@@ -1,0 +1,37 @@
+{% load staticfiles %}
+<link rel="stylesheet" type="text/css" href="{% static 'Interface/style.css' %}" />
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
+
+<nav class="navbar navbar-default">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="/">EScavenge</a>
+        </div>
+        <div class="navbar-collapse collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a>{{ huntUser }}</a></li>
+                <li><a href="/">Logout</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="container"></div>
+    <h1 style="text-align: center; margin: 25px;">Command Center</h1>
+
+    <h5 style="text-align: center; margin: 25px; color: red;"> {{  message }} </h5>
+    <div class="row" style="margin: 0 auto; width: 30%;">
+        <form action="/terminal/" method="POST">{% csrf_token %}
+
+            <div class="form-group">
+                <input class="form-control" type="text" placeholder="Command" id="command" name="command" />
+            </div>
+            <div class="form-group">
+                <h4 style="text-align: center;">Output of last command: <pre style="margin-top: 10px;">{{output}}</pre> </h4>
+            </div>
+            <div class="form-group">
+                <input type="hidden" size="20" id="huntUser" name="huntUser" value="{{ huntUser }}" /><br/>
+            </div>
+        </form>
+    </div>
+</div>
