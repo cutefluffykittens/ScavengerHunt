@@ -9,6 +9,7 @@ class Database:
         self.game_maker_cred = {"username":"maker", "password":"password"}
         self.game_running = False
 
+
     def add_team(self, team):
         self.team_list.append(team)
 
@@ -36,18 +37,24 @@ class Database:
     def get_landmarks(self):
         return self.landmarks
 
-    def add_to_path(self, landmark):
-        self.landmark_path.append(landmark)
+    def add_to_game(self, landmark):
+        if not self.game_is_running:
+            self.landmark_path.append(landmark)
+        else:
+            return "Cannot add a landmark when the game is running!"
+
 
     def delete_from_path(self, landmark):
-        try:
-            self.landmark_path.remove(landmark)
+        if not game_is_running:
+            try:
+                self.landmark_path.remove(landmark)
 
-        except ValueError:
-            pass
-
-    def get_landmark_path(self):
-        return self.landmark_path
+            except ValueError:
+                pass
+        else:
+            return "Cannot delete a landmark when the game is running!"
+    def get_game(self):
+        return self.game
 
     def set_guess_penalty(self, penalty):
         self.guess_penalty = penalty

@@ -4,6 +4,7 @@ import database
 import team
 import landmark
 
+
 class TestMakerLogin(unittest.TestCase):
     def setUp(self):
         self.database = database.Database()
@@ -27,9 +28,11 @@ class TestMakerLogout(unittest.TestCase):
     
     def test_logout_while_not_logged_in(self):
         self.assertEqual(self.maker1.logout(), False, "Bad response to maker logging out while not logged in")
+
     def test_good_logout(self):
         self.maker1.login("maker", "password")
         self.assertEqual(self.maker1.logout(), True, "Bad response to maker logging out correctly")
+
     def test_current_user_is_not_maker(self):
         self.maker1.login("maker","password")
         self.maker1.logout()
@@ -57,6 +60,7 @@ class TestMakerCheckStatus(unittest.TestCase):
         self.database.add_team(self.team2)
         dict = self.maker1.display_status()
         self.assertEqual(dict, "Team1\nteam2\n", "Cannot find entries in two team list")
+
 
 class TestMakerCreateTeam(unittest.TestCase):
     def setUp(self):
@@ -117,6 +121,7 @@ class TestMakerCreateTeam(unittest.TestCase):
         self.assertEqual(self.team2[0].username, "team2", "Team username in list not correct")
         self.assertEqual(self.team2[0].password, "password", "Team password in list not correct")
         self.assertEqual(len(self.team2), 1, "Team list length incorrect!")
+
 
 class TestMakerEditTeams(unittest.TestCase):
     def setUp(self):
@@ -183,6 +188,7 @@ class TestMakerEditTeams(unittest.TestCase):
         self.assertEqual(self.teams[1].username, "NewTeam2", "Valid input did not change team name!")
         self.assertEqual(self.teams[1].password, "NewPassword2", "Valid input did not change team password!")
 
+
 class TestMakerSetPenalties(unittest.TestCase):
     def setUp(self):
         self.database = database.Database()
@@ -218,6 +224,7 @@ class TestMakerSetPenalties(unittest.TestCase):
         self.assertEqual(self.database.get_time_penalty(), -1, "Time penalty not correct!")
         self.assertEqual(self.database.get_guess_penalty(), -1, "Guess penalty not correct!")
 
+
 class TestMakerLandmark(unittest.TestCase):
     def setUp(self):
         self.database = database.Database()
@@ -244,13 +251,81 @@ class TestMakerLandmark(unittest.TestCase):
         self.assertEqual(self.database.get_landmarks()[1].get_question(), self.input2[2], "test_add_landmark_not_empty: Landmark question wasn't correct")
         self.assertEqual(self.database.get_landmarks()[1].get_answer(), self.input2[3], "test_add_landmark_not_empty: Landmark answer wasn't correct")
 
-
     def test_remove_landmark_correct(self):
         self.maker1.add_landmark(self.input1)
         self.assertEqual(self.maker1.remove_landmark([self.input1[0]]), "Removed " + self.input1[0] + " from landmarks.", "test_delete_landmark_correct: Didn't delete correctly")
 
     def test_remove_landmark_incorrect(self):
         self.assertEqual(self.maker1.remove_landmark([self.input1[0]]), "Couldn't find landmark with name " + self.input1[0], "test_remove_landmark_incorrect: Shouldn't have deleted")
+
+
+class TestMakerCreateGame(unittest.TestCase):
+    def setUp(self):
+        self.database = database.Database()
+        self.maker1 = gamemaker.GameMaker(self.database)
+        self.input1 = ["name1", "clue1", "question1", "answer1"]
+        self.input2 = ["name2", "clue2", "question2", "answer2"]
+        self.input3 = ["name3", "clue3", "question3", "answer3"]
+        self.input4 = ["name4", "clue4", "question4", "answer4"]
+
+    def test_create_game_no_landmarks(self):
+        self.assertEqual(self.maker1.create_game(self), "Cannot create a game when there are no landmarks!",
+                         "Created game with no landmarks")
+
+    def test_create_game_when_running(self):
+        self.database.game_is_running = True
+        self.assertEqual(self.maker1.create_game(self), "Cannot create a game when one is already running!", "Created game with one running")
+
+    def test_create_game_valid(self):
+        self.maker1.add_landmark(self.input1)
+        self.maker1.add_landmark(self.input2)
+        self.maker1.add_landmark(self.input3)
+        self.maker1.add_landmark(self.input4)
+        input = "name1 name2 name3 name4"
+        input = input.split(" ")
+        self.assertEqual(self.maker1.create_game(input), "All landmarks added!", "Game not properly created!")
+
+    def test_create_game_valid_reverse(self):
+        self.maker1.add_landmark(self.input1)
+        self.maker1.add_landmark(self.input2)
+        self.maker1.add_landmark(self.input3)
+        self.maker1.add_landmark(self.input4)
+        input = "name4 name3 name2 name1"
+        input = input.split(" ")
+        self.assertEqual(self.maker1.create_game(input), "All landmarks added!", "Game not properly created!")
+
+    def test_create_game_valid_random(self):
+        self.maker1.add_landmark(self.input1)
+        self.maker1.add_landmark(self.input2)
+        self.maker1.add_landmark(self.input3)
+        self.maker1.add_landmark(self.input4)
+        input = "name2 name3 name1 name4"
+        input = input.split(" ")
+        self.assertEqual(self.maker1.create_game(input), "All landmarks added!", "Game not properly created!")
+
+    def test_create_game_invalid_no_landmarks(self):
+        input = "name1 name2 name3"
+        input = input.split(" ")
+        self.assertEqual(self.maker1.create_game(input), "Cannot create a game when there are no landmarks!", "Created empty game")
+        self.assertEqual(self.database.landmark_path, [], "Landmark path not empty")
+
+    def test_create_game_valid_wrong_names(self):
+        self.maker1.add_landmark(self.input1)
+        self.maker1.add_landmark(self.input2)
+        self.maker1.add_landmark(self.input3)
+        self.maker1.add_landmark(self.input4)
+        input = "name1 blah name2 blah name3 blablah name4"
+        input = input.split(" ")
+        self.assertEqual(self.maker1.create_game(input), "Could not find blah blah blablah but still added everything else",
+                         "Valid names with invalid names, not created but should have been")
+
+    def test_create_game_invalid_names(self):
+        self.maker1.add_landmark(self.input1)
+        input = "blah blah blah blah"
+        input = input.split(" ")
+        self.assertEqual(self.maker1.create_game(input), "Could not find blah blah blah blah no game created!", "Invalid name test")
+        self.assertEqual(self.database.landmark_path, [], "Invalid game not an empty list")
+
 
 class TestStartGame(unittest.TestCase):
     def setUp(self):
@@ -358,6 +433,8 @@ suite.addTest(unittest.makeSuite(TestMakerCheckStatus))
 suite.addTest(unittest.makeSuite(TestMakerCreateTeam))
 suite.addTest(unittest.makeSuite(TestMakerEditTeams))
 suite.addTest(unittest.makeSuite(TestMakerSetPenalties))
+suite.addTest(unittest.makeSuite(TestMakerLandmark))
+suite.addTest(unittest.makeSuite(TestMakerCreateGame))
 suite.addTest(unittest.makeSuite(TestStartGame))
 suite.addTest(unittest.makeSuite(TestMakerEndGame))
 suite.addTest(unittest.makeSuite(TestMakerDeleteTeam))
