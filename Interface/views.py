@@ -4,14 +4,19 @@ from django.urls import reverse
 import datetime
 from django.utils import timezone
 from Interface import Interface
-from .models import HuntUser, HuntCommand, Penalty, Game
+from .models import HuntUser, HuntCommand, Penalty, Game, Landmark
 
 
 def index(request):
     try:
+        Landmark.objects.get(name="dummy")
+    except Landmark.DoesNotExist:
+        landmark = Landmark(name="dummy", clue="dummy", question="dummy", answer="dummy", order_num=-1)
+        landmark.save()
+    try:
         HuntUser.objects.get(name="maker")
     except HuntUser.DoesNotExist:
-        maker = HuntUser(name="maker", password="password")
+        maker = HuntUser(name="maker", password="password", current_landmark=landmark)
         maker.save()
     try:
         Penalty.objects.get(name="time")

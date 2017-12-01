@@ -19,12 +19,13 @@ class GameMaker:
         landmarks = Landmark.objects.all()
         ret = ""
 
-        if len(landmarks) == 0:
+        if len(landmarks) == 1:
             ret = "There are no landmarks"
 
         else:
             for landmark in landmarks:
-                ret += landmark.name + "\n"
+                if landmark.name != "dummy":
+                    ret += landmark.name + "\n"
 
         return ret
 
@@ -63,7 +64,8 @@ class GameMaker:
         if len(input) == 2:
             name = input[0]
             password = input[1]
-            team = HuntUser(name=name, password=password)
+            dummy_landmark = Landmark.objects.get(name="dummy")
+            team = HuntUser(name=name, password=password, current_landmark=dummy_landmark)
             team.save()
             ret_string = "Added " + name
         else:
@@ -145,9 +147,6 @@ class GameMaker:
         return "Game started!"
 
     def end_game(self):
-        if self.database.get_current_user() is not self:
-            return "Can't prematurely end game when Gamemaker is not logged in"
-
         game = Game.objects.get(name="game")
         if not game.running:
             return "There is no game running!"
