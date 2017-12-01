@@ -1,5 +1,6 @@
 import team
 import landmark
+import copy
 
 class GameMaker:
     def __init__(self, database):
@@ -117,12 +118,33 @@ class GameMaker:
             ret_string = "Bad spacing! Need one space between time penalty and guess penalty"
         return ret_string
 
-    def create_game(self):
-        if not self.database.game_is_running and self.database.game == []:
-            all_landmarks = self.database.get_landmarks
+    def create_game(self, input):
+        ret_string = "Could not find "
+        input_index = 0
+        found_list = []
+        if not self.database.game_is_running and self.database.landmark_path == [] and len(self.database.landmarks) > 0:
+            all_landmarks = self.database.get_landmarks()
             for landmark in all_landmarks:
-                self.database.add_to_game(self, landmark)
-            return self.database.get_game()
+                found = False
+                landmark_name = landmark.get_name()
+                while input_index < len(input) and not found:
+                    if landmark_name == input[input_index] and landmark not in found_list:
+                        self.database.add_to_game(landmark)
+                        found_list.append(landmark.get_name())
+                        found = True
+                        input_index = 0
+                    if not found:
+                        input_index = input_index + 1
+            if len(found_list) != len(input):
+                for name in input:
+                    if name not in found_list:
+                        ret_string += name + " "
+            if ret_string == "Could not find ":
+                return "All landmarks added!"
+            elif len(found_list) > 0:
+                return ret_string + "but still added everything else"
+            else:
+                return ret_string + "no game created!"
         elif self.database.game_is_running:
             return "Cannot create a game when one is already running!"
         else:

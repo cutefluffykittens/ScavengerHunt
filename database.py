@@ -2,11 +2,12 @@ class Database:
     def __init__(self):
         self.team_list = []
         self.landmarks = []
-        self.game = []
+        self.landmark_path = []
         self.guess_penalty = -1
         self.time_penalty = -1
         self.current_user = None
         self.game_maker_cred = {"username":"maker", "password":"password"}
+        self.game_is_running = False
 
     def add_team(self, team):
         self.team_list.append(team)
@@ -36,13 +37,13 @@ class Database:
         return self.landmarks
 
     def add_to_game(self, landmark):
-        if not game_is_running:
-            self.game.append(landmark)
+        if not self.game_is_running:
+            self.landmark_path.append(landmark)
         else:
             return "Cannot add a landmark when the game is running!"
 
 
-    def delete_from_game(self, landmark):
+    def delete_from_path(self, landmark):
         if not game_is_running:
             try:
                 self.landmark_path.remove(landmark)

@@ -18,7 +18,8 @@ class Escavenge():
             "setpenalties": lambda: self.game_maker.set_penalties(params),
             "addlandmark": lambda params: print(self.game_maker.add_landmark(params)),
             "displaylandmarks": lambda params: print(self.game_maker.display_landmarks()),
-            "removelandmark": lambda params: print(self.game_maker.remove_landmark(params))
+            "removelandmark": lambda params: print(self.game_maker.remove_landmark(params)),
+            "creategame": lambda params: print(self.game_maker.create_game(params))
         }
 
         self.team = {
