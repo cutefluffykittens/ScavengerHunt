@@ -143,6 +143,9 @@ class GameMaker:
 
     def create_game(self, input):
         i = 0
+        for landmark in Landmark.objects.all():
+            landmark.order_num = -1
+            landmark.save()
         for name in input:
             try:
                 landmark = Landmark.objects.get(name=name)
