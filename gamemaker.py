@@ -51,8 +51,10 @@ class GameMaker:
         for team in teams:
             if team.name != "maker":
                 string += team.name + '\n' #+ ' is at ' + team.landmark + ' with ' + team.penalties + ' penalties\n'
+
         if string == '':
             string = 'No teams!'
+
         return string
 
     def display_menu(self):
