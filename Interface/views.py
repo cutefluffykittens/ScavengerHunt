@@ -4,10 +4,35 @@ from django.urls import reverse
 import datetime
 from django.utils import timezone
 from Interface import Interface
-from .models import HuntUser, HuntCommand
+from .models import HuntUser, HuntCommand, Penalty, Game, Landmark
 
 
 def index(request):
+    try:
+        Landmark.objects.get(name="dummy")
+    except Landmark.DoesNotExist:
+        landmark = Landmark(name="dummy", clue="dummy", question="dummy", answer="dummy", order_num=-1)
+        landmark.save()
+    try:
+        HuntUser.objects.get(name="maker")
+    except HuntUser.DoesNotExist:
+        maker = HuntUser(name="maker", password="password", current_landmark=landmark)
+        maker.save()
+    try:
+        Penalty.objects.get(name="time")
+    except Penalty.DoesNotExist:
+        penalty = Penalty(name="time", value=30)
+        penalty.save()
+    try:
+        Penalty.objects.get(name="guesses")
+    except Penalty.DoesNotExist:
+        penalty = Penalty(name="guesses", value=3)
+        penalty.save()
+    try:
+        Game.objects.get(name="game")
+    except Game.DoesNotExist:
+        game = Game(name="game", running=False)
+        game.save()
     return render(request, 'index.html', {"message":""})
 
 def validate(request):
@@ -32,6 +57,8 @@ def terminal(request):
     u = HuntUser.objects.get(name=request.POST["huntUser"])
     c = HuntCommand(text=request.POST["command"],user=u,timestamp=timezone.now())
     c.save()
+    if request.POST["command"] == "logout":
+        return render(request, "index.html")
     output = i.process(request.POST["command"], request.POST["huntUser"])
     context = {"huntUser":request.POST["huntUser"],"output":output}
     return render(request, "terminal.html", context)
