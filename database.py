@@ -7,6 +7,7 @@ class Database:
         self.time_penalty = -1
         self.current_user = None
         self.game_maker_cred = {"username":"maker", "password":"password"}
+        self.game_running = False
 
     def add_team(self, team):
         self.team_list.append(team)
