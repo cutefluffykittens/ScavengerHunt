@@ -8,48 +8,69 @@ from django.test import TestCase
 
 class TestMakerAddLandmark(TestCase):
     def setUp(self):
+        Landmark.objects.all().delete()
+        try:
+            landmark = Landmark(name="dummy", clue="dummy", question="dummy", answer="dummy", order_num=-1)
+            landmark.save()
+        except Landmark.DoesNotExist:
+            pass
         self.maker1 = gamemaker.GameMaker()
 
     def test_add_one_landmark(self):
-        self.maker1.add_landmark("land,clue,question,answer")
-        self.assertEqual(self.maker1.display_landmarks(), "There are no landmarks", "Bad landmark")
+        self.maker1.add_landmark(["land","clue","question","answer"])
+        self.assertEqual(self.maker1.display_landmarks(), "land\n", "Bad landmark")
 
     def test_add_two_landmarks(self):
-        self.maker1.add_landmark("land clue question answer")
-        self.maker1.add_landmark("land1 clue1 question1 answer1")
-        self.assertEqual(self.maker1.display_landmarks(), "l\nl\n", "Bad landmarks")
+        self.maker1.add_landmark(["land","clue","question","answer"])
+        self.maker1.add_landmark(["land1","clue1","question1","answer1"])
+        self.assertEqual(self.maker1.display_landmarks(), "land\nland1\n", "Bad landmarks")
 
 class TestMakerDisplayLandmarks(TestCase):
     def setUp(self):
+        Landmark.objects.all().delete()
+        try:
+            landmark = Landmark(name="dummy", clue="dummy", question="dummy", answer="dummy", order_num=-1)
+            landmark.save()
+        except Landmark.DoesNotExist:
+            pass
         self.maker1 = gamemaker.GameMaker()
 
     def test_display_one_landmark(self):
-        self.maker1.add_landmark("land clue question answer")
-        self.assertEqual(self.maker1.display_landmarks(), "There are no landmarks", "Bad display")
+        self.maker1.add_landmark(["land","clue","question","answer"])
+        self.assertEqual(self.maker1.display_landmarks(), "land\n", "Bad display")
 
     def test_display_two_landmarks(self):
-        self.maker1.add_landmark("land clue question answer")
-        self.maker1.add_landmark("land1 clue1 question1 answer1")
-        self.assertEqual(self.maker1.display_landmarks(), "l\nl\n", "Bad displays")
+        self.maker1.add_landmark(["land","clue","question","answer"])
+        self.maker1.add_landmark(["land1","clue1","question1","answer1"])
+        self.assertEqual(self.maker1.display_landmarks(), "land\nland1\n", "Bad displays")
 
 class TestMakerRemoveLandmarks(TestCase):
     def setUp(self):
+        Landmark.objects.all().delete()
+        try:
+            landmark = Landmark(name="dummy", clue="dummy", question="dummy", answer="dummy", order_num=-1)
+            landmark.save()
+        except Landmark.DoesNotExist:
+            pass
         self.maker1 = gamemaker.GameMaker()
 
     def test_remove_one_landmark(self):
-        self.maker1.add_landmark("land clue question answer")
-        self.maker1.remove_landmark("land")
-        self.assertEqual(self.maker1.display_landmarks(), "", "Did not remove landmark")
+        self.maker1.add_landmark(["land","clue","question","answer"])
+        self.maker1.remove_landmark(["land"])
+        self.assertEqual(self.maker1.display_landmarks(), "There are no landmarks", "Did not remove landmark")
 
     def test_remove_multiple_landmarks_to_none(self):
-        self.maker1.add_landmark("land clue question answer")
-        self.maker1.add_landmark("land1 clue1 question1 answer1")
-        self.assertEqual(self.maker1.display_landmarks(), "l\nl\n", "Did not remove landmarks")
+        self.maker1.add_landmark(["land","clue","question","answer"])
+        self.maker1.add_landmark(["land1","clue1","question1","answer1"])
+        self.maker1.remove_landmark(["land"])
+        self.maker1.remove_landmark(["land1"])
+        self.assertEqual(self.maker1.display_landmarks(), "There are no landmarks", "Did not remove landmarks")
 
     def test_remove_multiple_landmarks_to_one(self):
-        self.maker1.add_landmark("land clue question answer")
-        self.maker1.add_landmark("land1 clue1 question1 answer1")
-        self.assertEqual(self.maker1.display_landmarks(), "l\nl\n", "Did not remove landmarks")
+        self.maker1.add_landmark(["land","clue","question","answer"])
+        self.maker1.add_landmark(["land1","clue1","question1","answer1"])
+        self.maker1.remove_landmark(["land"])
+        self.assertEqual(self.maker1.display_landmarks(), "land1\n", "Did not remove landmarks")
 
 class TestMakerCheckStatus(TestCase):
     def setUp(self):
@@ -126,9 +147,16 @@ class TestMakerDeleteTeam(TestCase):
         self.assertEquals(self.game_maker.delete_team("team2"), "Invalid input!", "Bad 2nd two team delete")
 
 suite = unittest.TestSuite()
+suite.addTest(unittest.makeSuite(TestMakerAddLandmark))
+suite.addTest(unittest.makeSuite(TestMakerDisplayLandmarks))
+suite.addTest(unittest.makeSuite(TestMakerRemoveLandmarks))
 suite.addTest(unittest.makeSuite(TestMakerCheckStatus))
+suite.addTest(unittest.makeSuite(TestMakerDisplayMenu))
 suite.addTest(unittest.makeSuite(TestMakerCreateTeam))
 suite.addTest(unittest.makeSuite(TestMakerEditTeams))
+# suite.addTest(unittest.makeSuite(TestMakerSetPenalties))
+# suite.addTest(unittest.makeSuite(TestStartGame))
+# suite.addTest(unittest.makeSuite(TestMakerEndGame))
 suite.addTest(unittest.makeSuite(TestMakerDeleteTeam))
 
 
