@@ -152,13 +152,16 @@ class GameMaker:
     def create_game(self, input):
         # input: List of length > 1
         i = 0
+        # First, check that game is not currently running
+        if Game.objects.get(name="game").running:
+            return "Game is already in progress!"
         if len(input) == 0:
             return "Need at least one landmark to create a game"
         for landmark in Landmark.objects.all():
             # Reset all of the landmarks to index -1
             landmark.order_num = -1
             landmark.save()
-        # First, loop through all of the names in the input and make sure they are all valid
+        # Loop through all of the names in the input and make sure they are all valid
         for name in input:
             try:
                 landmark = Landmark.objects.get(name=name)

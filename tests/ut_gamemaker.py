@@ -167,8 +167,8 @@ class TestMakerCreateGame(TestCase):
         HuntUser.objects.all().delete()
         Landmark.objects.all().delete()
         Game.objects.all().delete()
-        game = Game(name="game",running=False)
-        game.save()
+        self.game = Game(name="game",running=False)
+        self.game.save()
         lm = Landmark(name="dummy", clue="dummy", question="dummy", answer="dummy", order_num=-1)
         lm.save()
         self.maker = gamemaker.GameMaker()
@@ -194,6 +194,13 @@ class TestMakerCreateGame(TestCase):
     def test_create_game_invalid_landmark(self):
         self.assertEqual("Landmark inv is not a valid landmark!",self.maker.create_game(["inv"]),
                          "Error: adding a landmark that doesn't exist shouldn't be valid")
+
+    def test_create_game_started(self):
+        self.maker.create_game(["landmark1"])
+        self.game.running = True
+        self.game.save()
+        self.assertEqual("Game is already in progress!",self.maker.create_game(["landmark1"]),
+                         "Error: game shouldn't have been created while a game is currently running")
 
     def test_create_game_multiple_landmarks(self):
         self.assertEqual("Game has been created!",self.maker.create_game(["landmark1","landmark2"]),
