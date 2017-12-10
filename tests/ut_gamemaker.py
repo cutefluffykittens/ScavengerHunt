@@ -80,11 +80,11 @@ class TestMakerCheckStatus(TestCase):
         lm.save()
         self.game_maker = gamemaker.GameMaker()
 
-    def test_single_team(self):
+    def test_status_single_team(self):
         self.game_maker.make_team(["team1", "password1"])
         self.assertEquals(self.game_maker.display_status(), "team1\n", "Bad single team return")
 
-    def test_multiple_teams(self):
+    def test_status_multiple_teams(self):
         self.game_maker.make_team(["team1", "password1"])
         self.game_maker.make_team(["team2", "password2"])
         self.assertEqual(self.game_maker.display_status(), "team1\nteam2\n", "Cannot find entries in two team list")
@@ -111,7 +111,7 @@ class TestMakerCreateTeam(TestCase):
         lm.save()
         self.game_maker = gamemaker.GameMaker()
 
-    def test_single_team(self):
+    def test_make_single_team(self):
         self.game_maker.make_team(["team1", "password"])
         self.assertEquals(self.game_maker.display_status(), "team1\n", "Bad single team return")
 
@@ -120,7 +120,7 @@ class TestMakerCreateTeam(TestCase):
         self.assertEqual("Team team1 already exists!",self.game_maker.make_team(["team1", "password"]),
                          "Error: team1 was added into the database twice")
 
-    def test_multiple_teams(self):
+    def test_make_multiple_teams(self):
         self.game_maker.make_team(["team1", "password"])
         self.game_maker.make_team(["team2", "password"])
         self.assertEqual(self.game_maker.display_status(), "team1\nteam2\n", "Cannot find entries in two team list")
@@ -134,11 +134,11 @@ class TestMakerEditTeams(TestCase):
         lm.save()
         self.game_maker = gamemaker.GameMaker()
 
-    def test_single_team(self):
+    def test_edit_single_team(self):
         self.game_maker.make_team(["team1", "password"])
         self.assertEquals(self.game_maker.edit_team(["team1", "team2", "passnew"]), "Edited team1 to have username team2 and password passnew", "Bad single team edit")
 
-    def test_multiple_teams(self):
+    def test_edit_multiple_teams(self):
         self.game_maker.make_team(["team1", "password"])
         self.game_maker.make_team(["team2", "password"])
         self.assertEquals(self.game_maker.edit_team(["team1", "team", "passnew"]), "Edited team1 to have username team and password passnew",
@@ -151,11 +151,11 @@ class TestMakerDeleteTeam(TestCase):
     def setUp(self):
         self.game_maker = gamemaker.GameMaker()
 
-    def test_single_team(self):
+    def test_delete_single_team(self):
         self.game_maker.make_team(["Team1 password"])
         self.assertEquals(self.game_maker.delete_team("Team1"), "Invalid input!", "Bad single team delete")
 
-    def test_multiple_teams(self):
+    def test_delete_multiple_teams(self):
         self.game_maker.make_team("Team1 password")
         self.game_maker.make_team("team2 password")
         self.assertEquals(self.game_maker.delete_team("Team1"), "Invalid input!", "Bad two team delete")
