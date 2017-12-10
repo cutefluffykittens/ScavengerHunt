@@ -107,18 +107,17 @@ class GameMaker:
 
     def delete_team(self, input):
         found = False
-        if len(input) == 2:
-            list = self.database.get_teams()
-            index = -1
-            for team in list:
-                ++index
-                if team.username == input[1]:
-                    try:
-                        found = True
-                        del list[index]
-                        ret_string = "" + input[1] +" has been deleted."
-                    except(ValueError):
-                        ret_string = "" + input[1] +" does not exist"
+        if len(input) == 1:
+            try:
+                team = HuntUser.objects.get(name=input[0])
+                team.delete()
+                found = True
+            except Landmark.DoesNotExist:
+                pass
+            if found:
+                return "Removed " + input[0] + " from teams."
+            else:
+                return "Couldn't find team with name " + input[0]
         else:
             ret_string = "Invalid input!"
             found = True
