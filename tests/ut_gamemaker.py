@@ -149,17 +149,21 @@ class TestMakerEditTeams(TestCase):
 
 class TestMakerDeleteTeam(TestCase):
     def setUp(self):
+        HuntUser.objects.all().delete()
+        Landmark.objects.all().delete()
+        lm = Landmark(name="dummy", clue="dummy", question="dummy", answer="dummy", order_num=-1)
+        lm.save()
         self.game_maker = gamemaker.GameMaker()
 
     def test_delete_single_team(self):
-        self.game_maker.make_team(["Team1 password"])
-        self.assertEquals(self.game_maker.delete_team("Team1"), "Invalid input!", "Bad single team delete")
+        self.game_maker.make_team(["Team1", "password"])
+        self.assertEquals(self.game_maker.delete_team(["Team1"]), "Removed Team1 from teams.", "Bad single team delete")
 
     def test_delete_multiple_teams(self):
-        self.game_maker.make_team("Team1 password")
-        self.game_maker.make_team("team2 password")
-        self.assertEquals(self.game_maker.delete_team("Team1"), "Invalid input!", "Bad two team delete")
-        self.assertEquals(self.game_maker.delete_team("team2"), "Invalid input!", "Bad 2nd two team delete")
+        self.game_maker.make_team(["Team1", "password"])
+        self.game_maker.make_team(["team2", "password"])
+        self.assertEquals(self.game_maker.delete_team(["Team1"]), "Removed Team1 from teams.", "Bad two team delete")
+        self.assertEquals(self.game_maker.delete_team(["team2"]), "Removed team2 from teams.", "Bad 2nd two team delete")
 
 
 class TestMakerCreateGame(TestCase):
