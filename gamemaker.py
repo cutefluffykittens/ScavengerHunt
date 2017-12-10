@@ -5,45 +5,45 @@ class GameMaker:
         pass
 
     def add_landmark(self, input):
+        # input: List of length 4
+        if len(input) != 4:
+            return "Invalid input!"
         name = input[0]
         clue = input[1]
         question = input[2]
         answer = input[3]
-
-        lm = Landmark(name=name, clue=clue, question=question, answer=answer)
-        lm.save()
-
-        return "Landmark " + name + " has been added!"
+        try:
+            # Check that no landmarks of the same name are already in the database
+            Landmark.objects.get(name=name)
+        except Landmark.DoesNotExist:
+            # If the landmark doesn't exist, add it to the database
+            lm = Landmark(name=name, clue=clue, question=question, answer=answer)
+            lm.save()
+            return "Landmark " + name + " has been added!"
+        # Should only get here if a landmark of the same name exists
+        return "Landmark " + name + " already exists!"
 
     def display_landmarks(self):
         landmarks = Landmark.objects.all()
         ret = ""
-
         if len(landmarks) == 1:
             ret = "There are no landmarks"
-
         else:
             for landmark in landmarks:
                 if landmark.name != "dummy":
                     ret += landmark.name + "\n"
-
         return ret
 
     def remove_landmark(self, input):
-        found = False
+        # input: List of length 1
         name = input[0]
-
         try:
-            landmark = Landmark.objects.get(name=name)
-            landmark.delete()
+            lm = Landmark.objects.get(name=name)
+            lm.delete()
             found = True
         except Landmark.DoesNotExist:
-            pass
-
-        if found:
-            return "Removed " + name + " from landmarks."
-        else:
             return "Couldn't find landmark with name " + name
+        return "Removed " + name + " from landmarks."
 
     def display_status(self):
         string = ''
@@ -56,31 +56,40 @@ class GameMaker:
         return string
 
     def display_menu(self):
-        return "Options\n\ndisplaystatus\nmaketeam [team name], [team password]\neditteam [team name to edit], [new team name], [new team password]\n" \
-        "addlandmark [name], [clue], [question], [answer]\ndisplaylandmarks\nremovelandmark [name]\nsetpenalties [new time penalty], [new guess penalty]\n" \
-        "creategame [landmark name]...\nstartgame\nendgame\nlogout\n"
+        return "Options\n\ndisplaystatus\nmaketeam [team name], [team password]\n" \
+               "editteam [team name to edit], [new team name], [new team password]\n" \
+               "addlandmark [name], [clue], [question], [answer]\ndisplaylandmarks\nremovelandmark [name]\n" \
+               "setpenalties [new time penalty], [new guess penalty]\n" \
+               "creategame [landmark name]...\nstartgame\nendgame\nlogout\n"
 
     def make_team(self, input):
+        # input: List of length 2
         if len(input) == 2:
             name = input[0]
             password = input[1]
             dummy_landmark = Landmark.objects.get(name="dummy")
-            team = HuntUser(name=name, password=password, current_landmark=dummy_landmark)
-            team.save()
-            ret_string = "Added " + name
+            try:
+                # Check that there isn't already a team with that name in the database
+                HuntUser.objects.get(name=name)
+            except HuntUser.DoesNotExist:
+                # If team doesn't exist, add the team and return
+                team = HuntUser(name=name, password=password, current_landmark=dummy_landmark)
+                team.save()
+                return "Added " + name
+            # Should only reach this return statement if a team with the same name exists
+            return "Team " + name + " already exists!"
         else:
-            ret_string = "Invalid input!"
-        return ret_string
+            # If input length was not 2, return
+            return "Invalid input!"
 
     def edit_team(self, input):
+        # input: List of length 3
         found = False
         if len(input) == 3:
             orig_name = input[0]
             new_name = input[1]
             new_pass = input[2]
-
             ret_string = "Edited " + orig_name + " to have username " + new_name + " and password " + new_pass
-
             try:
                 team = HuntUser.objects.get(name=orig_name)
                 team.name = new_name
@@ -88,8 +97,7 @@ class GameMaker:
                 team.save()
                 found = True
             except HuntUser.DoesNotExist:
-                pass
-
+                ret_string = "Could not find that team!"
         else:
             ret_string = "Invalid input!"
             found = True
@@ -111,7 +119,6 @@ class GameMaker:
                         ret_string = "" + input[1] +" has been deleted."
                     except(ValueError):
                         ret_string = "" + input[1] +" does not exist"
-
         else:
             ret_string = "Invalid input!"
             found = True
@@ -120,6 +127,7 @@ class GameMaker:
         return ret_string
 
     def set_penalties(self, input):
+        # input: List of length 2
         if len(input) == 2:
             try:
                 time = int(input[0])
@@ -142,33 +150,50 @@ class GameMaker:
         return ret_string
 
     def create_game(self, input):
+        # input: List of length > 1
         i = 0
+        # First, check that game is not currently running
+        if Game.objects.get(name="game").running:
+            return "Game is already in progress!"
+        if len(input) == 0:
+            return "Need at least one landmark to create a game"
         for landmark in Landmark.objects.all():
+            # Reset all of the landmarks to index -1
             landmark.order_num = -1
             landmark.save()
+        # Loop through all of the names in the input and make sure they are all valid
         for name in input:
             try:
                 landmark = Landmark.objects.get(name=name)
-                landmark.order_num = i
-                landmark.save()
-                i += 1
             except Landmark.DoesNotExist:
-                return "One of the names you entered is invalid!"
-
+                return "Landmark " + name + " is not a valid landmark!"
+        # Now that we know they're all valid landmarks, we can add them all to the game
+        for name in input:
+            landmark = Landmark.objects.get(name=name)
+            landmark.order_num = i
+            landmark.save()
+            i += 1
         return "Game has been created!"
 
     def start_game(self):
         game = Game.objects.get(name="game")
+        if game.running:
+            return "Game already started!"
+        try:
+            # Check that the game was actually created before we can start it
+            lm = Landmark.objects.get(order_num=0)
+        except Landmark.DoesNotExist:
+            # If no landmarks have an order_num of 0, it means the game wasn't created
+            # Thus, return an error statement to the user
+            return "No landmarks are part of the game!"
         game.running = True
         game.save()
-
         teams = HuntUser.objects.all()
         first_landmark = Landmark.objects.get(order_num=0)
         for team in teams:
             if team.name != "maker":
                 team.current_landmark = first_landmark
                 team.save()
-
         return "Game started!"
 
     def end_game(self):

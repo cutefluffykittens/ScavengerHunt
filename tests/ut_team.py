@@ -18,12 +18,19 @@ import unittest
 #        for team in teams:
 #            self.assertFalse(HuntUser.objects.get(name=team) is "team1", "The old team's username still exists")
 
+
 class TestTeamEditPassword(TestCase):
     def setUp(self):
+        dummy_landmark = Landmark(name="dummy",clue="dummy",question="dummy",answer="dummy",order_num=-1)
+        dummy_landmark.save()
+        team1 = HuntUser(name="team1", password="password1", current_landmark=dummy_landmark)
+        team1.save()
         self.t = team.Team()
+
     def test_edit_password(self):
         self.assertEqual("Password successfully changed to kittens", self.t.edit_password("team1",["kittens"]), "Error: password change did not return True")
         self.assertEqual("kittens", HuntUser.objects.get(name="team1").password, "Error: password was not changed")
+
 
 class TestTeamCommands(TestCase):
     def setUp(self):
@@ -31,11 +38,12 @@ class TestTeamCommands(TestCase):
         self.assertEqual("Options\n\nlog out\ndisplay status\nedit username\nedit password\nanswer\nrequest clue\n",
                          self.t.display_menu(),"Error: incorrect menu displayed")
 
+
 class TestTeamAnswerQuestions(TestCase):
     def setUp(self):
         Landmark.objects.all().delete()
-        landmark = Landmark(name="dummy", clue="dummy", question="dummy", answer="dummy", order_num=-1)
-        landmark.save()
+        lm = Landmark(name="dummy", clue="dummy", question="dummy", answer="dummy", order_num=-1)
+        lm.save()
 
         Game.objects.all().delete()
         game = Game(name="game", running=False)
@@ -52,6 +60,7 @@ class TestTeamAnswerQuestions(TestCase):
     def test_answer_no_game_running(self):
         self.assertEqual("There is no game running!",self.t.answer_question("team1",["a1"]),
                          "Error: cannot answer a question when there is no game running")
+
     def test_correct_one_landmark(self):
         self.maker.start_game()
         self.assertEqual("Correct answer given! You can now request the clue for the next landmark",
@@ -59,6 +68,7 @@ class TestTeamAnswerQuestions(TestCase):
                          "Error: should have returned True when answered correctly")
         self.assertEqual(1,HuntUser.objects.get(name="team1").current_landmark.order_num,
                          "Error: current landmark was not updated from 0 to 1 when answer was correct")
+
     def test_team_incorrect_answer(self):
         self.maker.start_game()
         self.assertEqual("Incorrect answer, please try again",
@@ -66,36 +76,58 @@ class TestTeamAnswerQuestions(TestCase):
                          "Error: should have returned False when answered incorrectly")
         self.assertEqual(0,HuntUser.objects.get(name="team2").current_landmark.order_num,
                          "Error: current landmark should remain 0 when answer was incorrect")
+
     def test_correct_end_game(self):
         self.maker.start_game()
         self.t.answer_question("team1", ["a1"])
-        self.assertEqual("Congrats! You win!",
-                        self.t.answer_question("team1",["a2"]),
-                        "Error: should have indicated that the team has won")
+        self.assertEqual("Congrats! You win!",self.t.answer_question("team1",["a2"]),
+                         "Error: should have indicated that the team has won")
         self.assertEqual(1,HuntUser.objects.get(name="team1").current_landmark.order_num,
                          "Error: current landmark was not updated from 0 to 1 when answer was correct")
 
+
 class TestTeamInitialization(TestCase):
     def setUp(self):
-        self.team1 = HuntUser.objects.get(name="team1")
-        self.assertEqual("username1",self.team1.username,"Error: username not initialized correctly")
+        Landmark.objects.all().delete()
+        dummy_landmark = Landmark(name="dummy", clue="dummy", question="dummy", answer="dummy", order_num=-1)
+        dummy_landmark.save()
+        self.team1 = HuntUser(name="team1", password="password1", current_landmark=dummy_landmark)
+        self.team1.save()
+        self.assertEqual("team1",self.team1.name,"Error: username not initialized correctly")
+
     def test_initial_password(self):
         self.assertEqual("password1",self.team1.password,"Error: password not initialized correctly")
+
     def test_initial_landmark(self):
-        self.assertEqual(-1,HuntUser.objects.get(name="team1").current_landmark_id,"Error: current landmark should be initialized to -1")
+        self.assertEqual(-1,self.team1.current_landmark.order_num,"Error: current landmark should be initialized to -1")
+
 
 class TestTeamRequestClue(TestCase):
     def setUp(self):
+        Landmark.objects.all().delete()
+        dummy_landmark = Landmark(name="dummy", clue="dummy", question="dummy", answer="dummy", order_num=-1)
+        dummy_landmark.save()
+        team1 = HuntUser(name="team1", password="password1", current_landmark=dummy_landmark)
+        team1.save()
+        Game.objects.all().delete()
+        self.game = Game(name="game", running=False)
+        self.game.save()
         self.t = team.Team()
         self.maker = gamemaker.GameMaker()
-        Landmark.objects.all().delete()
+
     def test_request_no_landmarks_added(self):
+        self.game.running = True
+        self.game.save()
         self.assertEqual("Not at a valid landmark",self.t.request_clue("team1"),
                          "Error: cannot answer a question when there are no landmarks")
+
     def test_request_good(self):
-        self.landmark1 = self.maker.add_landmark(["landmark1","clue1","q1","a1"])
+        self.maker.add_landmark(["landmark1","clue1","q1","a1"])
+        self.maker.create_game(["landmark1"])
+        self.maker.start_game()
         self.assertEqual("clue1", self.t.request_clue("team1"),
                          "Error: should have returned clue1")
+
 
 suite = unittest.TestSuite()
 
