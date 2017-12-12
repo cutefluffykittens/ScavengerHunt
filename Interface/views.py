@@ -6,7 +6,6 @@ from django.utils import timezone
 from Interface import Interface
 from .models import HuntUser, HuntCommand, Penalty, Game, Landmark
 
-
 def index(request):
     try:
         Landmark.objects.get(name="dummy")
@@ -46,8 +45,12 @@ def validate(request):
         if u.password != request.POST["password"]:
             message = "Invalid password"
     if message == "XXX":
-        context = {"huntUser": request.POST["huntUser"]}
-        return render(request,"terminal.html",context)
+        teams = HuntUser.objects.exclude(name="maker")
+        context = {"huntUser": request.POST["huntUser"],"teams": teams,"landmarks": Landmark.objects.exclude(name="dummy")}
+        if u.name == "maker":
+            return render(request,"gamemaker.html",context)
+        else:
+            return render(request,"team.html",context)
     else:
         return render(request,"index.html",{"message":message})
 
@@ -63,3 +66,25 @@ def terminal(request):
     context = {"huntUser":request.POST["huntUser"],"output":output}
     return render(request, "terminal.html", context)
 
+def addlandmark(request):
+    command = request.POST["command"] + " " + request.POST["landmarkName"] + ", " + \
+        request.POST["landmarkClue"] + ", " + request.POST["landmarkQuestion"] + \
+        ", " + request.POST["landmarkAnswer"]
+    print(command)
+    i = Interface.Interface()
+    u = HuntUser.objects.get(name=request.POST["huntUser"])
+    c = HuntCommand(text=command,user=u,timestamp=timezone.now())
+    c.save()
+    i.process(command, request.POST["huntUser"])
+    context = {"huntUser": request.POST["huntUser"],"landmarks":Landmark.objects.exclude(name="dummy"),
+               "teams":HuntUser.objects.exclude(name="maker")}
+    return render(request,"gamemaker.html",context)
+
+def gamemaker(request):
+    switch = {
+        "addlandmark": lambda request: addlandmark(request)
+    }
+    return switch[request.POST["command"]](request)
+
+def team(request):
+    return render(request, "team.html")

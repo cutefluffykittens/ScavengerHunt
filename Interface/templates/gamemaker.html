@@ -1,0 +1,171 @@
+{% include "Partials/header.html" %}
+
+<div class="container" style="height: 88%">
+    <div class="row">
+        <div class="col-lg-4">
+            <h1 style="text-align: center; font-size: 60px; margin-bottom: 60px">00:27m</h1>
+            <h3 style="text-align: center; font-size: 40px">Leaderboard</h3>
+            <div class="list-group">
+                {% for team in teams %}
+                    <a href="" type="button" data-toggle="modal" data-target="#editTeam" class="list-group-item list-group-item-action flex-column align-items-start">
+                        <h4 style="text-align:left; margin: 5px 0px 5px 10px">
+                            {{ team.name }}
+                            <span style="float:right; color:darkgrey; font-weight: normal; margin: 0px 10px 0px 0px">
+                                {{ team.current_landmark.name }}
+                            </span>
+                        </h4>
+                    </a>
+                {% endfor %}
+                <a href="" type="button" data-toggle="modal" data-target="#newTeam" class="list-group-item list-group-item-action flex-column align-items-start">
+                    <h4 style="text-align: center; margin: 5px 0px 5px 10px; font-weight: normal; color: darkgrey">Add new team</h4>
+                </a>
+            </div>
+        </div>
+        <div class="col-lg-4" style="height: 100%; text-align: center">
+            <button class="btn btn-success" style="margin: 200px auto; height: 12%; width: 80%; font-size: 30px">Start Game</button>
+        </div>
+        <div class="col-lg-4">
+            <h3 style="text-align: center; font-size: 40px">Landmarks</h3>
+            <div class="list-group">
+                {% for landmark in landmarks %}
+                    <a href="" type="button" data-toggle="modal" data-target="#editLandmark" class="list-group-item list-group-item-action flex-column align-items-start">
+                        <h4 style="text-align:center;">{{ landmark.name }}</h4>
+                    </a>
+                {% endfor %}
+                <a href="" type="button" data-toggle="modal" data-target="#newLandmark" class="list-group-item list-group-item-action flex-column align-items-start">
+                    <h4 style="text-align: center; margin: 5px 0px 5px 10px; font-weight: normal; color: darkgrey">Add new landmark</h4>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="editTeam" tabindex="-1" role="dialog" aria-labelledby="editTeamLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="editTeamLabel" style="text-align: center">Edit Team</h4>
+      </div>
+      <div class="modal-body">
+          <form>
+              <div class="form-group">
+                <label for="team-name" class="col-form-label">Team Name:</label>
+                <input type="text" class="form-control" id="team-name">
+              </div>
+              <div class="form-group">
+                <label for="team-password" class="col-form-label">Password:</label>
+                <input type="text" class="form-control" id="team-password">
+              </div>
+          </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" data-dismiss="modal">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="newTeam" tabindex="-1" role="dialog" aria-labelledby="newTeamLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="newTeamLabel" style="text-align: center">Add New Team</h4>
+      </div>
+      <div class="modal-body">
+          <form>
+              <div class="form-group">
+                <label for="team-name" class="col-form-label">Team Name:</label>
+                <input type="text" class="form-control" id="team-name">
+              </div>
+              <div class="form-group">
+                <label for="team-password" class="col-form-label">Password:</label>
+                <input type="text" class="form-control" id="team-password">
+              </div>
+          </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" data-dismiss="modal">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="editLandmark" tabindex="-1" role="dialog" aria-labelledby="editLandmarkLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="editLandmarkLabel" style="text-align: center">Edit Landmark</h4>
+      </div>
+      <div class="modal-body">
+          <form>
+              <div class="form-group">
+                <label for="landmark-name" class="col-form-label">Landmark Name:</label>
+                <input type="text" class="form-control" id="landmark-name">
+              </div>
+              <div class="form-group">
+                <label for="landmark-clue" class="col-form-label">Clue:</label>
+                <input type="text" class="form-control" id="landmark-clue">
+              </div>
+              <div class="form-group">
+                <label for="landmark-question" class="col-form-label">Confirmation Question:</label>
+                <input type="text" class="form-control" id="landmark-question">
+              </div>
+              <div class="form-group">
+                <label for="landmark-answer" class="col-form-label">Confirmation Answer:</label>
+                <input type="text" class="form-control" id="landmark-answer">
+              </div>
+          </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" data-dismiss="modal">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="newLandmark" tabindex="-1" role="dialog" aria-labelledby="newLandmarkLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="newLandmarkLabel" style="text-align: center">Add Landmark</h4>
+      </div>
+      <div class="modal-body">
+          <form action="/gamemaker/" method="POST">{% csrf_token %}
+              <div class="form-group">
+                <input type="hidden" size="20" id="command" name="command" value="addlandmark" /><br/>
+              </div>
+              <div class="form-group">
+                <input type="hidden" size="20" id="huntUser" name="huntUser" value="{{ huntUser }}" /><br/>
+              </div>
+              <div class="form-group">
+                <label for="landmark-name" class="col-form-label">Landmark Name:</label>
+                <input type="text" class="form-control" id="landmarkName" name="landmarkName">
+              </div>
+              <div class="form-group">
+                <label for="landmark-clue" class="col-form-label">Clue:</label>
+                <input type="text" class="form-control" id="landmarkClue" name="landmarkClue">
+              </div>
+              <div class="form-group">
+                <label for="landmark-question" class="col-form-label">Confirmation Question:</label>
+                <input type="text" class="form-control" id="landmarkQuestion" name="landmarkQuestion">
+              </div>
+              <div class="form-group">
+                <label for="landmark-answer" class="col-form-label">Confirmation Answer:</label>
+                <input type="text" class="form-control" id="landmarkAnswer" name="landmarkAnswer">
+              </div>
+              <button type="submit" class="btn btn-primary">Submit</button>
+          </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
