@@ -158,14 +158,6 @@ class GameMaker:
                     game.time_penalty = time
                     game.guess_penalty = guess
                     game.save()
-
-                    # time_penalty = Penalty.objects.get(name="time")
-                    # time_penalty.value = time
-                    # time_penalty.save()
-
-                    # guess_penalty = Penalty.objects.get(name="guesses")
-                    # guess_penalty.value = guess
-                    # guess_penalty.save()
                     ret_string = "Time penalty is " + input[0] + " minutes and guess penalty is " + input[1] + " guesses"
                 else:
                     ret_string = "Invalid input! Need integers greater than 0"
