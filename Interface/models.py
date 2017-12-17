@@ -1,4 +1,6 @@
 from django.db import models
+from django.utils import timezone
+from datetime import datetime
 
 
 class Landmark(models.Model):
@@ -9,6 +11,7 @@ class Landmark(models.Model):
     question = models.CharField(max_length=255)
     answer = models.CharField(max_length=255)
     order_num = models.IntegerField(default=0)
+    points = models.IntegerField(default=10)
 
 
 class HuntUser(models.Model):
@@ -17,6 +20,11 @@ class HuntUser(models.Model):
     name = models.CharField(max_length=20, unique=True)
     password = models.CharField(max_length=20)
     current_landmark = models.ForeignKey(Landmark)
+    penalties = models.IntegerField(default=0)
+    score = models.IntegerField(default=0)
+    question_requested = models.BooleanField(default=False)
+    time_requested = models.DateTimeField(default=timezone.now)
+    game_ended = models.BooleanField(default=False)
 
 
 class HuntCommand(models.Model):
@@ -37,3 +45,4 @@ class Penalty(models.Model):
 class Game(models.Model):
     name = models.CharField(max_length=255, default="game")
     running = models.BooleanField(default=False)
+    time_start = models.DateTimeField(default=timezone.now)

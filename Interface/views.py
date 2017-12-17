@@ -13,6 +13,11 @@ def index(request):
     except Landmark.DoesNotExist:
         landmark = Landmark(name="dummy", clue="dummy", question="dummy", answer="dummy", order_num=-1)
         landmark.save()
+    # try:
+    #    Landmark.objects.get(name="end")
+    #except Landmark.DoesNotExist:
+    #    landmark = Landmark(name="end", clue="end", question="end", answer="end", order_num=-1)
+    #    landmark.save()
     try:
         HuntUser.objects.get(name="maker")
     except HuntUser.DoesNotExist:
@@ -31,7 +36,7 @@ def index(request):
     try:
         Game.objects.get(name="game")
     except Game.DoesNotExist:
-        game = Game(name="game", running=False)
+        game = Game(name="game", running=False, time_start=timezone.now())
         game.save()
     return render(request, 'index.html', {"message":""})
 

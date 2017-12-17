@@ -1,4 +1,7 @@
 from Interface.models import HuntUser, Landmark, Penalty, Game
+from django.utils import timezone
+from datetime import datetime
+import team
 
 class GameMaker:
     def __init__(self):
@@ -48,9 +51,22 @@ class GameMaker:
     def display_status(self):
         string = ''
         teams = HuntUser.objects.all()
+        game = Game.objects.get(name="game")
         for team in teams:
             if team.name != "maker":
-                string += team.name + '\n' #+ ' is at ' + team.landmark + ' with ' + team.penalties + ' penalties\n'
+                string += "Team: " + team.name + "\nScore: " + str(team.score) \
+                          + "\nPenalties: " + str(team.penalties)
+                if game.running:
+                    if team.current_landmark.order_num == 0:
+                        string += "\nCurrent landmark: start\n"
+                    else:
+                        cur = team.current_landmark.order_num - 1
+                        string += "\nCurrent landmark: " + Landmark.objects.get(order_num=cur) + "\n"
+                string += "\n"
+        if game.running:
+            string += "Game in progress"
+        else:
+            string += "There is currently no game running"
         if string == '':
             string = 'No teams!'
         return string
@@ -186,12 +202,17 @@ class GameMaker:
             # Thus, return an error statement to the user
             return "No landmarks are part of the game!"
         game.running = True
+        game.time_start = datetime.now(tz=timezone.utc)    # Set the official start time of the game
         game.save()
         teams = HuntUser.objects.all()
         first_landmark = Landmark.objects.get(order_num=0)
         for team in teams:
             if team.name != "maker":
                 team.current_landmark = first_landmark
+                team.score = 0
+                team.penalties = 0
+                team.game_ended = False
+                team.question_requested = False
                 team.save()
         return "Game started!"
 
@@ -202,3 +223,4 @@ class GameMaker:
         game.running = False
         game.save()
         return "Game over"
+
