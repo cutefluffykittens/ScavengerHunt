@@ -17,20 +17,20 @@ def index(request):
     except HuntUser.DoesNotExist:
         maker = HuntUser(name="maker", password="password", current_landmark=landmark)
         maker.save()
-    try:
-        Penalty.objects.get(name="time")
-    except Penalty.DoesNotExist:
-        penalty = Penalty(name="time", value=30)
-        penalty.save()
-    try:
-        Penalty.objects.get(name="guesses")
-    except Penalty.DoesNotExist:
-        penalty = Penalty(name="guesses", value=3)
-        penalty.save()
+    # try:
+    #    Penalty.objects.get(name="time")
+    # except Penalty.DoesNotExist:
+    #    penalty = Penalty(name="time", value=30)
+    #    penalty.save()
+    # try:
+    #     Penalty.objects.get(name="guesses")
+    # except Penalty.DoesNotExist:
+    #    penalty = Penalty(name="guesses", value=3)
+    #    penalty.save()
     try:
         Game.objects.get(name="game")
     except Game.DoesNotExist:
-        game = Game(name="game", running=False)
+        game = Game(name="game", running=False, time_start=timezone.now())
         game.save()
     return render(request, 'index.html', {"message":""})
 

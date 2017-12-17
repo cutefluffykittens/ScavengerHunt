@@ -5,6 +5,8 @@ from Interface.models import HuntUser, Landmark, Game
 import team
 #import landmark
 from django.test import TestCase
+from django.utils import timezone
+from datetime import datetime, timedelta
 
 
 class TestMakerAddLandmark(TestCase):
@@ -78,16 +80,24 @@ class TestMakerCheckStatus(TestCase):
         Landmark.objects.all().delete()
         lm = Landmark(name="dummy", clue="dummy", question="dummy", answer="dummy", order_num=-1)
         lm.save()
+        Game.objects.all().delete()
+        self.game = Game(name="game",running=False,time_start=timezone.now())
+        self.game.save()
         self.game_maker = gamemaker.GameMaker()
 
     def test_status_single_team(self):
         self.game_maker.make_team(["team1", "password1"])
-        self.assertEquals(self.game_maker.display_status(), "team1\n", "Bad single team return")
+        self.assertEquals(self.game_maker.display_status(),
+                          "Team: team1\nScore: 0\nPenalties: 0\n\nThere is currently no game running",
+                          "Bad single team return")
 
     def test_status_multiple_teams(self):
         self.game_maker.make_team(["team1", "password1"])
         self.game_maker.make_team(["team2", "password2"])
-        self.assertEqual(self.game_maker.display_status(), "team1\nteam2\n", "Cannot find entries in two team list")
+        self.assertEqual(self.game_maker.display_status(),
+                         "Team: team1\nScore: 0\nPenalties: 0\n\nTeam: team2\nScore: 0\nPenalties: 0\n\n"
+                         "There is currently no game running",
+                         "Cannot find entries in two team list")
 
 
 class TestMakerDisplayMenu(TestCase):
@@ -109,11 +119,16 @@ class TestMakerCreateTeam(TestCase):
         Landmark.objects.all().delete()
         lm = Landmark(name="dummy", clue="dummy", question="dummy", answer="dummy", order_num=-1)
         lm.save()
+        Game.objects.all().delete()
+        self.game = Game(name="game",running=False,time_start=timezone.now())
+        self.game.save()
         self.game_maker = gamemaker.GameMaker()
 
     def test_make_single_team(self):
         self.game_maker.make_team(["team1", "password"])
-        self.assertEquals(self.game_maker.display_status(), "team1\n", "Bad single team return")
+        self.assertEquals(self.game_maker.display_status(),
+                          "Team: team1\nScore: 0\nPenalties: 0\n\nThere is currently no game running",
+                          "Bad single team return")
 
     def test_make_team_same_name(self):
         self.game_maker.make_team(["team1", "password"])
@@ -123,7 +138,10 @@ class TestMakerCreateTeam(TestCase):
     def test_make_multiple_teams(self):
         self.game_maker.make_team(["team1", "password"])
         self.game_maker.make_team(["team2", "password"])
-        self.assertEqual(self.game_maker.display_status(), "team1\nteam2\n", "Cannot find entries in two team list")
+        self.assertEqual(self.game_maker.display_status(),
+                         "Team: team1\nScore: 0\nPenalties: 0\n\nTeam: team2\nScore: 0\nPenalties: 0\n\n"
+                         "There is currently no game running",
+                         "Cannot find entries in two team list")
 
 
 class TestMakerEditTeams(TestCase):
@@ -171,7 +189,7 @@ class TestMakerCreateGame(TestCase):
         HuntUser.objects.all().delete()
         Landmark.objects.all().delete()
         Game.objects.all().delete()
-        self.game = Game(name="game",running=False)
+        self.game = Game(name="game",running=False,time_start=timezone.now())
         self.game.save()
         lm = Landmark(name="dummy", clue="dummy", question="dummy", answer="dummy", order_num=-1)
         lm.save()
