@@ -1,10 +1,6 @@
-#import int_user
-#import database
-# import landmark
 from Interface.models import HuntUser, Game, Landmark
 from datetime import datetime, timedelta, timezone
 
-# class Team(int_user.User):
 class Team():
     def __init__(self):
         pass
@@ -31,23 +27,6 @@ class Team():
         else:
             ret += "\nThere is currently no game running"
         return ret
-
-    # def edit_username(self, teamname, input):
-    #     # teamname: string
-    #     # input: List of length 1
-    #     username = input[0]
-    #
-    #     try:
-    #         team = HuntUser.objects.get(name=teamname)
-    #         team.name = username
-    #         team.save()
-    #         ret = "Username successfully changed to " + username
-    #     except HuntUser.DoesNotExist:
-    #         ret = "Team does not exist"
-    #
-    #     ret = "Username successfully changed to " + username
-    #     return ret
-
 
     def edit_password(self, teamname, input):
         # teamname: string

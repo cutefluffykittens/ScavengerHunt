@@ -17,16 +17,6 @@ def index(request):
     except HuntUser.DoesNotExist:
         maker = HuntUser(name="maker", password="password", current_landmark=landmark)
         maker.save()
-    # try:
-    #    Penalty.objects.get(name="time")
-    # except Penalty.DoesNotExist:
-    #    penalty = Penalty(name="time", value=30)
-    #    penalty.save()
-    # try:
-    #     Penalty.objects.get(name="guesses")
-    # except Penalty.DoesNotExist:
-    #    penalty = Penalty(name="guesses", value=3)
-    #    penalty.save()
     try:
         Game.objects.get(name="game")
     except Game.DoesNotExist:
