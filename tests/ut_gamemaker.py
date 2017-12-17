@@ -1,9 +1,7 @@
 import unittest
 import gamemaker
 from Interface.models import HuntUser, Landmark, Game
-#import database
 import team
-#import landmark
 from django.test import TestCase
 from django.utils import timezone
 from datetime import datetime, timedelta
@@ -117,7 +115,7 @@ class TestMakerCreateTeam(TestCase):
     def setUp(self):
         HuntUser.objects.all().delete()
         Landmark.objects.all().delete()
-        lm = Landmark(name="dummy", clue="dummy", question="dummy", answer="dummy", order_num=-1)
+        lm = Landmark(name="dummy", clue="dummy", question="dummy", answer="dummy", order_num=-1, points=-1)
         lm.save()
         Game.objects.all().delete()
         self.game = Game(name="game",running=False,time_start=timezone.now())
@@ -196,8 +194,8 @@ class TestMakerCreateGame(TestCase):
         self.maker = gamemaker.GameMaker()
         self.maker.make_team(["team1","password1"])
         self.t = team.Team()
-        lm1 = Landmark(name="landmark1", clue="clue1", question="question1", answer="answer1", order_num=-1)
-        lm2 = Landmark(name="landmark2", clue="clue2", question="question2", answer="answer2", order_num=-1)
+        lm1 = Landmark(name="landmark1", clue="clue1", question="question1", answer="answer1", order_num=-1, points=-1)
+        lm2 = Landmark(name="landmark2", clue="clue2", question="question2", answer="answer2", order_num=-1, points=-1)
         lm1.save()
         lm2.save()
 
