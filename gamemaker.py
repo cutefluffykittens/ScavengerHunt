@@ -5,7 +5,6 @@ class GameMaker:
         pass
 
     def add_landmark(self, input):
-        # input: List of length 4
         if len(input) != 4:
             return "Invalid input!"
         name = input[0]
