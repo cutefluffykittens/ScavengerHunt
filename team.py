@@ -84,20 +84,22 @@ class Team():
         if not team.question_requested:
             return "You need to receive the question first!"
         if answer != team.current_landmark.answer:
-            team.penalties += 5
+            team.guesses += 1
+            if team.guesses >= game.num_guesses:
+                team.penalties += game.guess_penalty
             team.save()
             ret_string = "Incorrect answer, please try again"
         else:
             team.score += team.current_landmark.points
-            period = timedelta(minutes=5)
+            period = timedelta(minutes=game.guess_period)
             if (current_time - team.time_requested) >= period:
-                team.penalties += 5
+                team.penalties += game.time_penalty
             try:
                 next_landmark = Landmark.objects.get(order_num=team.current_landmark.order_num + 1)
             except Landmark.DoesNotExist:
                 team.game_ended = True
                 if self.check_first(teamname):
-                    team.score += 50
+                    team.score += game.last_landmark_bonus
                 team.save()
                 if self.check_game_over():
                     game.running = False
@@ -175,7 +177,7 @@ class Team():
         # Get the current time
         current_time = datetime.now(tz=timezone.utc)
         # Get game time = 1 hour
-        period = timedelta(hours=1)
+        period = timedelta(hours=game.game_period)
         game = Game.objects.get(name="game")
         # Check that time hasn't run out
         if (game.time_start + period) <= current_time:

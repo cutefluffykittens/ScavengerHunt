@@ -380,7 +380,8 @@ class TestScoreSystem(TestCase):
 
     def test_score_wrong_answer(self):
         self.t.request_question("team1")
-        self.t.answer_question("team1", ["incorrect"])
+        for x in range(0, 5):
+            self.t.answer_question("team1", ["incorrect"])
         team1 = HuntUser.objects.get(name="team1")
         self.assertEqual(5, team1.penalties, "Error: penalties was " + str(team1.penalties) + " instead of 5")
 

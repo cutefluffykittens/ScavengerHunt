@@ -88,14 +88,14 @@ class TestMakerCheckStatus(TestCase):
     def test_status_single_team(self):
         self.game_maker.make_team(["team1", "password1"])
         self.assertEquals(self.game_maker.display_status(),
-                          "Team: team1\nScore: 0\nPenalties: 0\nThere is currently no game running",
+                          "Team: team1\nScore: 0\nPenalties: 0\n\nThere is currently no game running",
                           "Bad single team return")
 
     def test_status_multiple_teams(self):
         self.game_maker.make_team(["team1", "password1"])
         self.game_maker.make_team(["team2", "password2"])
         self.assertEqual(self.game_maker.display_status(),
-                         "Team: team1\nScore: 0\nPenalties: 0\nTeam: team2\nScore: 0\nPenalties: 0\n"
+                         "Team: team1\nScore: 0\nPenalties: 0\n\nTeam: team2\nScore: 0\nPenalties: 0\n\n"
                          "There is currently no game running",
                          "Cannot find entries in two team list")
 
@@ -127,7 +127,7 @@ class TestMakerCreateTeam(TestCase):
     def test_make_single_team(self):
         self.game_maker.make_team(["team1", "password"])
         self.assertEquals(self.game_maker.display_status(),
-                          "Team: team1\nScore: 0\nPenalties: 0\nThere is currently no game running",
+                          "Team: team1\nScore: 0\nPenalties: 0\n\nThere is currently no game running",
                           "Bad single team return")
 
     def test_make_team_same_name(self):
@@ -139,7 +139,7 @@ class TestMakerCreateTeam(TestCase):
         self.game_maker.make_team(["team1", "password"])
         self.game_maker.make_team(["team2", "password"])
         self.assertEqual(self.game_maker.display_status(),
-                         "Team: team1\nScore: 0\nPenalties: 0\nTeam: team2\nScore: 0\nPenalties: 0\n"
+                         "Team: team1\nScore: 0\nPenalties: 0\n\nTeam: team2\nScore: 0\nPenalties: 0\n\n"
                          "There is currently no game running",
                          "Cannot find entries in two team list")
 

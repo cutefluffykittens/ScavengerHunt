@@ -24,6 +24,7 @@ class HuntUser(models.Model):
     score = models.IntegerField(default=0)
     question_requested = models.BooleanField(default=False)
     time_requested = models.DateTimeField(default=timezone.now)
+    guesses = models.IntegerField(default=0)
     game_ended = models.BooleanField(default=False)
 
 
@@ -46,3 +47,9 @@ class Game(models.Model):
     name = models.CharField(max_length=255, default="game")
     running = models.BooleanField(default=False)
     time_start = models.DateTimeField(default=timezone.now)
+    game_period = models.IntegerField(default=1)    # default = 1 hour
+    guess_period = models.IntegerField(default=5)   # default = 5 minutes
+    num_guesses = models.IntegerField(default=5)
+    time_penalty = models.IntegerField(default=5)
+    guess_penalty = models.IntegerField(default=5)
+    last_landmark_bonus = models.IntegerField(default=50)

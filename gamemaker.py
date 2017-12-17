@@ -1,7 +1,6 @@
 from Interface.models import HuntUser, Landmark, Penalty, Game
 from django.utils import timezone
 from datetime import datetime
-import team
 
 class GameMaker:
     def __init__(self):
@@ -52,19 +51,26 @@ class GameMaker:
         string = ''
         teams = HuntUser.objects.all()
         game = Game.objects.get(name="game")
+        game_over = True
         for team in teams:
             if team.name != "maker":
                 string += "Team: " + team.name + "\nScore: " + str(team.score) \
-                          + "\nPenalties: " + str(team.penalties)
+                          + "\nPenalties: " + str(team.penalties) + "\n"
                 if game.running:
                     if team.current_landmark.order_num == 0:
-                        string += "\nCurrent landmark: start\n"
+                        string += "Current landmark: start\n"
+                    elif team.game_ended:
+                        string += "Current landmark: finish\n"
                     else:
                         cur = team.current_landmark.order_num - 1
-                        string += "\nCurrent landmark: " + Landmark.objects.get(order_num=cur) + "\n"
+                        string += "Current landmark: " + Landmark.objects.get(order_num=cur).name + "\n"
                 string += "\n"
+                if not team.game_ended:
+                    game_over = False
         if game.running:
             string += "Game in progress"
+        elif game_over:
+            string += "The game has ended"
         else:
             string += "There is currently no game running"
         if string == '':
@@ -148,13 +154,18 @@ class GameMaker:
                 time = int(input[0])
                 guess = int(input[1])
                 if time > 0 and guess > 0:
-                    time_penalty = Penalty.objects.get(name="time")
-                    time_penalty.value = time
-                    time_penalty.save()
+                    game = Game.objects.get(name="game")
+                    game.time_penalty = time
+                    game.guess_penalty = guess
+                    game.save()
 
-                    guess_penalty = Penalty.objects.get(name="guesses")
-                    guess_penalty.value = guess
-                    guess_penalty.save()
+                    # time_penalty = Penalty.objects.get(name="time")
+                    # time_penalty.value = time
+                    # time_penalty.save()
+
+                    # guess_penalty = Penalty.objects.get(name="guesses")
+                    # guess_penalty.value = guess
+                    # guess_penalty.save()
                     ret_string = "Time penalty is " + input[0] + " minutes and guess penalty is " + input[1] + " guesses"
                 else:
                     ret_string = "Invalid input! Need integers greater than 0"
@@ -211,6 +222,7 @@ class GameMaker:
                 team.current_landmark = first_landmark
                 team.score = 0
                 team.penalties = 0
+                team.guesses = 0
                 team.game_ended = False
                 team.question_requested = False
                 team.save()
