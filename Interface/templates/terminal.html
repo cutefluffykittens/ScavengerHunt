@@ -1,20 +1,4 @@
-{% load staticfiles %}
-<link rel="stylesheet" type="text/css" href="{% static 'Interface/style.css' %}" />
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
-
-<nav class="navbar navbar-default">
-    <div class="container-fluid">
-        <div class="navbar-header">
-            <a class="navbar-brand" href="/">EScavenge</a>
-        </div>
-        <div class="navbar-collapse collapse">
-            <ul class="nav navbar-nav navbar-right">
-                <li><a>{{ huntUser }}</a></li>
-                <li><a href="/">Logout</a></li>
-            </ul>
-        </div>
-    </div>
-</nav>
+{% include "Partials/header.html" %}
 
 <div class="container"></div>
     <h1 style="text-align: center; margin: 25px;">Command Center</h1>

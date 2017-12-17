@@ -22,4 +22,6 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^terminal/', views.terminal, name='terminal'),
     url(r'^validate/', views.validate, name="validate", ),
+    url(r'^gamemaker/', views.gamemaker, name="gamemaker", ),
+    url(r'^team/', views.team, name="team",),
 ]
