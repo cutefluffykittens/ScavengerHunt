@@ -1,8 +1,23 @@
 import team
+import database
+import landmark
 import gamemaker
 from Interface.models import HuntUser, Landmark,Game
 from django.test import TestCase
 import unittest
+
+#class TestTeamEditUsername(TestCase):
+#    def setUp(self):
+#        self.team1 = HuntUser.objects.get(name="team1")
+#    def test_edit_username_no_team_logged_in(self):
+#        self.assertFalse(self.team1.edit_username(["bestteam"]), "Error: cannot edit username with no team logged in")
+#    def test_edit_username(self):
+#        self.assertEqual("Username successfully changed to bestteam", self.team1.edit_username(["bestteam"]), "Error: username change did not return True")
+#        self.assertEqual("bestteam", self.team1.username, "Error: username was not changed")
+#        teams = HuntUser.objects.all()
+#        for team in teams:
+#            self.assertFalse(HuntUser.objects.get(name=team) is "team1", "The old team's username still exists")
+
 
 class TestTeamEditPassword(TestCase):
     def setUp(self):

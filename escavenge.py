@@ -1,3 +1,4 @@
+import database
 import gamemaker
 import team
 import logging
@@ -28,6 +29,7 @@ class Escavenge():
             "logout": lambda teamname, params: self.t.logout(teamname),
             "displaystatus": lambda teamname, params: self.t.display_status(teamname),
             "help": lambda teamname, params: self.t.display_menu(),
+            # "editusername" : lambda teamname, params: self.t.edit_username(teamname, params),
             "editpassword" : lambda teamname, params: self.t.edit_password(teamname, params),
             "requestclue": lambda teamname, params: self.t.request_clue(teamname),
             "requestquestion": lambda teamname, params: self.t.request_question(teamname),

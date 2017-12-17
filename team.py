@@ -1,5 +1,9 @@
+#import int_user
+#import database
+import landmark
 from Interface.models import HuntUser, Game, Landmark
 
+#class Team(int_user.User):
 class Team():
     def __init__(self):
         pass
@@ -15,7 +19,26 @@ class Team():
             ret = "Team does not exist"
         return ret
 
+    # def edit_username(self, teamname, input):
+    #     # teamname: string
+    #     # input: List of length 1
+    #     username = input[0]
+    #
+    #     try:
+    #         team = HuntUser.objects.get(name=teamname)
+    #         team.name = username
+    #         team.save()
+    #         ret = "Username successfully changed to " + username
+    #     except HuntUser.DoesNotExist:
+    #         ret = "Team does not exist"
+    #
+    #     ret = "Username successfully changed to " + username
+    #     return ret
+
+
     def edit_password(self, teamname, input):
+        # teamname: string
+        # input: List of length 1
         password = input[0]
         try:
             team = HuntUser.objects.get(name=teamname)
@@ -27,6 +50,8 @@ class Team():
         return ret
 
     def answer_question(self, teamname, input):
+        # teamname: string
+        # input: list of length 1
         answer = input[0]
         game = Game.objects.get(name="game")
         if not game.running:
@@ -48,6 +73,7 @@ class Team():
         return ret_string
 
     def request_clue(self, teamname):
+        # teamname: string
         game = Game.objects.get(name="game")
         if not game.running:
             return "There is no game running!"
@@ -60,6 +86,7 @@ class Team():
         return team.current_landmark.clue
 
     def request_question(self, teamname):
+        # teamname: string
         game = Game.objects.get(name="game")
         if not game.running:
             return "There is no game running!"

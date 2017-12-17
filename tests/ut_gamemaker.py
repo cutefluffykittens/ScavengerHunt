@@ -1,7 +1,9 @@
 import unittest
 import gamemaker
 from Interface.models import HuntUser, Landmark, Game
+#import database
 import team
+#import landmark
 from django.test import TestCase
 
 
