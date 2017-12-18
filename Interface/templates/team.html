@@ -1,1 +1,50 @@
 {% include "Partials/header.html" %}
+
+<div class="container" style="height: 88%">
+    <div class="row">
+        <div class="col-lg-4">
+            <h1 style="text-align: center; font-size: 60px; margin-bottom: 60px">00:27m</h1>
+            <h3 style="text-align: center; font-size: 40px">Leaderboard</h3>
+            <div class="table">
+                <table class = "table">
+                    {% for team in teams %}
+                        {% if team.name == huntUser.name %}
+                            <tr class ="info"><th style="text-align:center">{{ team.name }}</th>
+                            <td style="text-align:center">{{ team.score }}</td></tr>
+                       {% else %}
+                            <tr><th style="text-align:center">{{ team.name }}</th>
+                            <td style="text-align:center">{{ team.score }}</td></tr>
+                       {% endif %}
+                {% endfor %}
+                </table>
+            </div>
+        </div>
+        <div class="col-lg-4" style="height: 100%; text-align: center">
+            <div class="jumbotron">
+                <h3>Time to answer Q: </h3>
+                <h1>2:04</h1>
+            </div>
+            <h1>Q: {{ huntUser.current_landmark.question }}</h1>
+            <h2>Hint: {{ huntUser.current_landmark.clue }}</h2>
+            <form action="#">
+                <h2>Answer: <input type="text" name="answer"><br></h2>
+                <input type="submit" value="Submit">
+            </form>
+        </div>
+
+        <div class="col-lg-4">
+            <h3 style="text-align: center; font-size: 40px">Stats</h3>
+            <div class="table">
+                <table class = "table">
+                    <tr><th style="text-align:center">Points</th></tr>
+                    <tr><td style="text-align:center">{{ huntUser.score }}</td></tr>
+                    <tr><th style="text-align:center">Penalties</th></tr>
+                    <tr><td style="text-align:center">{{ huntUser.penalties }}</td></tr>
+                    <tr><th style="text-align:center">Guesses</th></tr>
+                    <tr><td style="text-align:center">{{ huntUser.guesses }}</td></tr>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+

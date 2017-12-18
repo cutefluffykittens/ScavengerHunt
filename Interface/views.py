@@ -45,8 +45,8 @@ def validate(request):
         if u.password != request.POST["password"]:
             message = "Invalid password"
     if message == "XXX":
-        teams = HuntUser.objects.exclude(name="maker")
-        context = {"huntUser": request.POST["huntUser"],"teams": teams,"landmarks": Landmark.objects.exclude(name="dummy")}
+        teams = HuntUser.objects.exclude(name="maker").order_by('-score')
+        context = {"huntUser": u,"teams": teams,"landmarks": Landmark.objects.exclude(name="dummy")}
         if u.name == "maker":
             return render(request,"gamemaker.html",context)
         else:
@@ -87,4 +87,7 @@ def gamemaker(request):
     return switch[request.POST["command"]](request)
 
 def team(request):
-    return render(request, "team.html")
+    u = HuntUser.objects.get(name=request.POST["huntUser"])
+    context = {"huntUser": request.POST["huntUser"],
+               "teams":HuntUser.objects.exclude(name="maker").order_by('-score')}
+    return render(request, "team.html", context)
