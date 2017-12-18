@@ -243,8 +243,8 @@ class TestTeamRequestClue(TestCase):
         self.maker.create_game(["landmark1"])
         self.maker.start_game()
         team1 = HuntUser.objects.get(name="team1")
-        period = timedelta(hours=1)
         game = Game.objects.get(name="game")
+        period = timedelta(minutes=game.game_period)
         game.time_start -= period
         game.save()
         self.assertEqual("Time is up!",self.t.request_clue("team1"),
@@ -382,8 +382,10 @@ class TestScoreSystem(TestCase):
 
 
 suite = unittest.TestSuite()
+suite.addTest(unittest.makeSuite(TestTeamDisplayStatus))
 suite.addTest(unittest.makeSuite(TestTeamEditPassword))
 suite.addTest(unittest.makeSuite(TestTeamCommands))
+suite.addTest(unittest.makeSuite(TestTeamInitialization))
 suite.addTest(unittest.makeSuite(TestTeamRequestQuestion))
 suite.addTest(unittest.makeSuite(TestTeamAnswerQuestions))
 suite.addTest(unittest.makeSuite(TestTeamRequestClue))
