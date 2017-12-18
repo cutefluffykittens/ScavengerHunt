@@ -25,6 +25,65 @@ class GameMaker:
         # Should only get here if a landmark of the same name exists
         return "Landmark " + name + " already exists!"
 
+    def edit_landmark(self, input):
+        change = False
+        # Begin with empty strings for a full concatenation of which fields were altered on return
+        new_name = ""
+        clue = ""
+        question = ""
+        answer = ""
+        order = ""
+        ret_string_order = ""
+        points = ""
+        ret_string_points = ""
+        # We always assume we are at least trying to edit; this will return for every case
+        ret_string = "Edit to " + input[0] + " "
+        name = input[0]
+        lm = Landmark.objects.get(name=name)
+        # If name field is empty, do nothing
+        if input[1] != "":
+            lm.name = input[1]
+            change = True
+            new_name = "name "
+        # If clue field is empty, do nothing
+        if input[2] != "":
+            lm.clue = input[2]
+            change = True
+            clue = "clue "
+        # If question field is empty, do nothing
+        if input[3] != "":
+            lm.question = input[3]
+            change = True
+            question = "question "
+        # If answer field is empty, do nothing
+        if input[4] != "":
+            lm.answer = input[4]
+            change = True
+            answer = "answer "
+        # If order number field is empty, do nothing. Must be an integer!
+        if input[5] != "":
+            try:
+                lm.order_num = int(input[5])
+                change = True
+                order = "order "
+            except ValueError:
+                ret_string_order = " order number must be an integer!"
+        # If points field is empty, do nothing. Must be an integer!
+        if input[6] != "":
+            try:
+                lm.points = int(input[6])
+                change = True
+                points = "points "
+            except ValueError:
+                ret_string_points = " points must be an integer!"
+        lm.save()
+        # If no changes were made, the edit was unsuccessful. Return such
+        if not change:
+            return ret_string + "unsuccessful" + ret_string_order + ret_string_points
+        # Otherwise, return what fields were changed as well as any issues with order or points
+        return ret_string + new_name + clue + question + answer + order + points + "successful"\
+               + ret_string_order + ret_string_points
+
     def display_landmarks(self):
         landmarks = Landmark.objects.all()
         ret = ""
@@ -80,7 +139,9 @@ class GameMaker:
     def display_menu(self):
         return "Options\n\ndisplaystatus\nmaketeam [team name], [team password]\n" \
                "editteam [team name to edit], [new team name], [new team password]\n" \
-               "addlandmark [name], [clue], [question], [answer]\ndisplaylandmarks\nremovelandmark [name]\n" \
+               "addlandmark [name], [clue], [question], [answer]\n" \
+               "editlandmarks [name], [clue], [question], [answer], [order number], [points]\n" \
+               "displaylandmarks\nremovelandmark [name]\n" \
                "setpenalties [new time penalty], [new guess penalty]\n" \
                "creategame [landmark name]...\nstartgame\nendgame\nlogout\n"
 
