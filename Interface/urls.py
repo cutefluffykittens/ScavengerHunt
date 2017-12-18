@@ -6,4 +6,5 @@ urlpatterns = [
     url(r'^validate/', views.validate, name="validate",),
     url(r'^gamemaker/', views.gamemaker, name="gamemaker",),
     url(r'^team/', views.team, name="team",),
+    url(r'^togglegame', views.toggle_game, name="togglegame"),
 ]

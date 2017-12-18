@@ -46,7 +46,12 @@ def validate(request):
             message = "Invalid password"
     if message == "XXX":
         teams = HuntUser.objects.exclude(name="maker")
-        context = {"huntUser": request.POST["huntUser"],"teams": teams,"landmarks": Landmark.objects.exclude(name="dummy")}
+        time = Game.objects.get(name="game").time_start
+        time_delta = Game.objects.get(name="game").game_period
+        context = {"huntUser": request.POST["huntUser"],"teams": teams,
+                   "landmarks": Landmark.objects.exclude(name="dummy"),
+                   "time": time, "timeDelta": time_delta,
+                   "running": Game.objects.get(name="game").running}
         if u.name == "maker":
             return render(request,"gamemaker.html",context)
         else:
@@ -85,6 +90,14 @@ def gamemaker(request):
         "addlandmark": lambda request: addlandmark(request)
     }
     return switch[request.POST["command"]](request)
+
+def toggle_game(request):
+    game = Game.objects.get(name="game")
+    game.running = not game.running
+    game.save()
+    context = {"huntUser": request.POST["huntUser"], "landmarks": Landmark.objects.exclude(name="dummy"),
+               "teams": HuntUser.objects.exclude(name="maker"), "running": game.running}
+    return render(request, "gamemaker.html", context)
 
 def team(request):
     return render(request, "team.html")
