@@ -28,6 +28,94 @@ class TestMakerAddLandmark(TestCase):
         self.maker1.add_landmark(["land1","clue1","question1","answer1"])
         self.assertEqual(self.maker1.display_landmarks(), "land\nland1\n", "Bad landmarks")
 
+class TestMakerEditLandmarks(TestCase):
+    def setUp(self):
+        Landmark.objects.all().delete()
+        lm = Landmark(name="dummy", clue="dummy", question="dummy", answer="dummy", order_num=-1)
+        lm.save()
+        self.maker1 = gamemaker.GameMaker()
+
+    def test_edit_one_landmark_name(self):
+        self.maker1.add_landmark(["land","clue","question","answer"])
+        self.assertEqual(self.maker1.edit_landmark(["land","newland","","","","",""]),
+                         "Edit to land name successful", "Edit to one landmark name unsuccessful")
+
+    def test_edit_one_landmark_clue(self):
+        self.maker1.add_landmark(["land", "clue", "question", "answer"])
+        self.assertEqual(self.maker1.edit_landmark(["land", "", "newclue", "", "", "", ""]),
+                         "Edit to land clue successful", "Edit to one landmark clue unsuccessful")
+
+    def test_edit_one_landmark_question(self):
+        self.maker1.add_landmark(["land", "clue", "question", "answer"])
+        self.assertEqual(self.maker1.edit_landmark(["land", "", "", "newquestion", "", "", ""]),
+                         "Edit to land question successful", "Edit to one landmark question unsuccessful")
+
+    def test_edit_one_landmark_answer(self):
+        self.maker1.add_landmark(["land", "clue", "question", "answer"])
+        self.assertEqual(self.maker1.edit_landmark(["land", "", "", "", "newanswer", "", ""]),
+                         "Edit to land answer successful", "Edit to one landmark answer unsuccessful")
+
+    def test_edit_one_landmark_order_num(self):
+        self.maker1.add_landmark(["land", "clue", "question", "answer"])
+        self.assertEqual(self.maker1.edit_landmark(["land", "", "", "", "", "0", ""]),
+                         "Edit to land order successful", "Edit to one landmark order unsuccessful")
+
+    def test_edit_one_landmark_penalty(self):
+        self.maker1.add_landmark(["land", "clue", "question", "answer"])
+        self.assertEqual(self.maker1.edit_landmark(["land", "", "", "", "", "", "11"]),
+                         "Edit to land points successful", "Edit to one landmark points unsuccessful")
+
+    def test_edit_one_landmark_all(self):
+        self.maker1.add_landmark(["land", "clue", "question", "answer"])
+        self.assertEqual(self.maker1.edit_landmark(["land", "newland", "newclue", "newquestion", "newanswer", "0", "11"]),
+                         "Edit to land name clue question answer order points successful",
+                         "Edit to one landmark name unsuccessful")
+
+    def test_edit_one_landmark_none(self):
+        self.maker1.add_landmark(["land", "clue", "question", "answer"])
+        self.assertEqual(self.maker1.edit_landmark(["land", "", "", "", "", "", ""]),
+            "Edit to land unsuccessful", "No change unsuccessful")
+
+    def test_edit_one_landmark_not_an_int_order_only(self):
+        self.maker1.add_landmark(["land", "clue", "question", "answer"])
+        self.assertEqual(
+            self.maker1.edit_landmark(["land", "", "", "", "", "a", ""]),
+            "Edit to land unsuccessful order number must be an integer!", "Edit to one landmark name unsuccessful")
+
+    def test_edit_one_landmark_not_an_int_points_only(self):
+        self.maker1.add_landmark(["land", "clue", "question", "answer"])
+        self.assertEqual(
+            self.maker1.edit_landmark(["land", "", "", "", "", "", "a"]),
+            "Edit to land unsuccessful points must be an integer!", "Edit to one landmark ints points unsuccessful")
+
+    def test_edit_one_landmark_not_an_int_points_order_only(self):
+        self.maker1.add_landmark(["land", "clue", "question", "answer"])
+        self.assertEqual(
+            self.maker1.edit_landmark(["land", "", "", "", "", "a", "a"]),
+            "Edit to land unsuccessful order number must be an integer! points must be an integer!",
+            "Edit to one landmark int points and order unsuccessful")
+
+    def test_edit_one_landmark_not_an_int_points_other(self):
+        self.maker1.add_landmark(["land", "clue", "question", "answer"])
+        self.assertEqual(
+            self.maker1.edit_landmark(["land", "newland", "", "", "", "a", ""]),
+            "Edit to land name successful points must be an integer!",
+            "Edit to one landmark int points and other unsuccessful")
+
+    def test_edit_one_landmark_not_an_int_points_other(self):
+        self.maker1.add_landmark(["land", "clue", "question", "answer"])
+        self.assertEqual(
+            self.maker1.edit_landmark(["land", "newland", "", "", "", "", "a"]),
+            "Edit to land name successful order must be an integer!",
+            "Edit to one landmark int order and other unsuccessful")
+
+    def test_edit_one_landmark_not_an_int_points_other(self):
+        self.maker1.add_landmark(["land", "clue", "question", "answer"])
+        self.assertEqual(
+            self.maker1.edit_landmark(["land", "newland", "", "", "", "a", "a"]),
+            "Edit to land name successful order number must be an integer! points must be an integer!",
+            "Edit to one landmark int order, points and other unsuccessful")
+
 
 class TestMakerDisplayLandmarks(TestCase):
     def setUp(self):
@@ -44,7 +132,6 @@ class TestMakerDisplayLandmarks(TestCase):
         self.maker1.add_landmark(["land","clue","question","answer"])
         self.maker1.add_landmark(["land1","clue1","question1","answer1"])
         self.assertEqual(self.maker1.display_landmarks(), "land\nland1\n", "Bad displays")
-
 
 class TestMakerRemoveLandmarks(TestCase):
     def setUp(self):
@@ -286,6 +373,7 @@ class TestMakerStartAndEndGame(TestCase):
 
 suite = unittest.TestSuite()
 suite.addTest(unittest.makeSuite(TestMakerAddLandmark))
+suite.addTest(unittest.makeSuite(TestMakerEditLandmarks))
 suite.addTest(unittest.makeSuite(TestMakerDisplayLandmarks))
 suite.addTest(unittest.makeSuite(TestMakerRemoveLandmarks))
 suite.addTest(unittest.makeSuite(TestMakerCheckStatus))
