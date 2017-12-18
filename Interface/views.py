@@ -35,6 +35,7 @@ def index(request):
     return render(request, 'index.html', {"message":""})
 
 def validate(request):
+    i = Interface.Interface()
 
     message = "XXX"
     try:
@@ -87,7 +88,13 @@ def gamemaker(request):
     return switch[request.POST["command"]](request)
 
 def team(request):
+    i = Interface.Interface()
+    answer = request.POST["answer"]
     u = HuntUser.objects.get(name=request.POST["huntUser"])
-    context = {"huntUser": request.POST["huntUser"],
-               "teams":HuntUser.objects.exclude(name="maker").order_by('-score')}
+    t = HuntUser.objects.exclude(name="maker").order_by('-score')
+    command = "answer " + answer
+
+    print(i.process(command, request.POST["huntUser"]))
+
+    context = {"huntUser": u, "teams": t}
     return render(request, "team.html", context)

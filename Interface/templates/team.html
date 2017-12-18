@@ -26,8 +26,9 @@
             </div>
             <h1>Q: {{ huntUser.current_landmark.question }}</h1>
             <h2>Hint: {{ huntUser.current_landmark.clue }}</h2>
-            <form action="#">
-                <h2>Answer: <input type="text" name="answer"><br></h2>
+            <form action="/team/" method="POST">{% csrf_token %}
+                <input type="hidden" size="20" id="huntUser" name="huntUser" value="{{ huntUser }}" /><br/>                 \
+                <h2>Answer: <input type="text" id="answer" name="answer"><br></h2>
                 <input type="submit" value="Submit">
             </form>
         </div>

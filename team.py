@@ -44,13 +44,13 @@ class Team():
     def answer_question(self, teamname, input):
         # teamname: string
         # input: list of length 1
-        time_check = self.check_time_up()
+        #time_check = self.check_time_up()
         current_time = datetime.now(tz=timezone.utc)
         answer = input[0]
         game = Game.objects.get(name="game")
         if not game.running:
-            if time_check:
-                return "Time is up!"
+            #if time_check:
+             #   return "Time is up!"
             return "There is no game running!"
         try:
             team = HuntUser.objects.get(name=teamname)
@@ -88,15 +88,16 @@ class Team():
             team.question_requested = False
             team.save()
             ret_string = "Correct answer given! You can now request the clue for the next landmark"
+        print (ret_string)
         return ret_string
 
     def request_clue(self, teamname):
         # teamname: string
-        time_check = self.check_time_up()
+        #time_check = self.check_time_up()
         game = Game.objects.get(name="game")
         if not game.running:
-            if time_check:
-                return "Time is up!"
+            #if time_check:
+            #    return "Time is up!"
             return "There is no game running!"
         try:
             team = HuntUser.objects.get(name=teamname)
@@ -110,11 +111,11 @@ class Team():
 
     def request_question(self, teamname):
         # teamname: string
-        time_check = self.check_time_up()
+        #time_check = self.check_time_up()
         game = Game.objects.get(name="game")
         if not game.running:
-            if time_check:
-                return "Time is up!"
+            #if time_check:
+            #    return "Time is up!"
             return "There is no game running!"
         try:
             team = HuntUser.objects.get(name=teamname)
