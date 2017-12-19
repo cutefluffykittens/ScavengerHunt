@@ -51,7 +51,7 @@ def validate(request):
         if u.name == "maker":
             return render(request,"gamemaker.html",context)
         else:
-            return render(request,"team.html",context)
+            return load(request, u, "Welcome!")
     else:
         return render(request,"index.html",{"message":message})
 
@@ -88,13 +88,35 @@ def gamemaker(request):
     return switch[request.POST["command"]](request)
 
 def team(request):
+    switch = {
+        "editpassword": lambda request: editpassword(request),
+        "answer": lambda request: answer(request),
+   }
+    return switch[request.POST["command"]](request)
+
+
+def editpassword(request):
     i = Interface.Interface()
-    answer = request.POST["answer"]
     u = HuntUser.objects.get(name=request.POST["huntUser"])
+    p = request.POST["password"]
+    command = "editpassword" + " " + p
+    r = i.process(command, u)
+    return load(request, u, r)
+
+def answer(request):
+    i = Interface.Interface()
+    u = HuntUser.objects.get(name=request.POST["huntUser"])
+
+    answer = "answer " + request.POST["answer"]
+    r = i.process(answer, request.POST["huntUser"])
+    return load(request,u,r)
+
+
+def load(request, user, response):
+    i = Interface.Interface()
     t = HuntUser.objects.exclude(name="maker").order_by('-score')
-    command = "answer " + answer
+    q = i.process("requestquestion", user)
+    c = i.process("requestclue", user)
 
-    print(i.process(command, request.POST["huntUser"]))
-
-    context = {"huntUser": u, "teams": t}
+    context = {"huntUser": user, "teams": t, "question": q, "clue": c, "response": response}
     return render(request, "team.html", context)
