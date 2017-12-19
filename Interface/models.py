@@ -47,7 +47,7 @@ class Game(models.Model):
     name = models.CharField(max_length=255, default="game")
     running = models.BooleanField(default=False)
     time_start = models.DateTimeField(default=timezone.now)
-    game_period = models.IntegerField(default=60)
+    game_period = models.IntegerField(default=1)    # default = 1 hour
     guess_period = models.IntegerField(default=5)   # default = 5 minutes
     num_guesses = models.IntegerField(default=5)
     time_penalty = models.IntegerField(default=5)

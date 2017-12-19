@@ -17,7 +17,6 @@ class Escavenge():
             "editteam": lambda params: self.game_maker.edit_team(params),
             "setpenalties": lambda params: self.game_maker.set_penalties(params),
             "addlandmark": lambda params: self.game_maker.add_landmark(params),
-            "editlandmark": lambda params: self.game_maker.edt_landmark(params),
             "displaylandmarks": lambda params: self.game_maker.display_landmarks(),
             "removelandmark": lambda params: self.game_maker.remove_landmark(params),
             "creategame": lambda params: self.game_maker.create_game(params),
