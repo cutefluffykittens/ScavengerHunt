@@ -176,6 +176,7 @@ class GameMaker:
         if len(input) == 0:
             return "Need at least one landmark to create a game"
         for landmark in Landmark.objects.all():
+            print(landmark)
             # Reset all of the landmarks to index -1
             landmark.order_num = -1
             landmark.save()
