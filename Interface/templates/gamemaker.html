@@ -4,11 +4,11 @@
     <div class="row">
         <div class="col-lg-4">
             <h1 style="text-align: center; font-size: 60px; margin-bottom: 60px">
-                {% if game.running == True %}
-                    { game.time_start }m
-                {% else %}
-                    00:00m</h1>
-                {%  endif %}
+                 {% if game.running == True %}
+                     { game.time_start }m
+                 {% else %}
+                     00:00m</h1>
+                 {%  endif %}
             <h3 style="text-align: center; font-size: 40px">Leaderboard</h3>
             <div class="list-group">
                 {% for team in teams %}
@@ -34,9 +34,9 @@
             <div class="list-group">
                 {% for landmark in landmarks %}
                     <a href="" type="button" data-toggle="modal" data-target="#editLandmark" class="landmark-item list-group-item list-group-item-action flex-column align-items-start">
-                        <h4 style="text-align:center;">
-                            <span id="landmark-span">{{ landmark.name }}</span>
-                        </h4>
+                         <h4 style="text-align:center;">
+                             <span id="landmark-span">{{ landmark.name }}</span>
+                         </h4>
                     </a>
                 {% endfor %}
                 <a href="" type="button" data-toggle="modal" data-target="#newLandmark" class="list-group-item list-group-item-action flex-column align-items-start">
@@ -61,21 +61,21 @@
               </div>
               <div class="form-group">
                 <input type="hidden" size="20" id="huntUser" name="huntUser" value="{{ huntUser }}" />
-              </div>
-              <div class="form-group">
-                <input type="hidden" size="20" id="team-name" name="team-name" />
-              </div>
-              <div class="form-group">
-                <label for="newTeamName" class="col-form-label">Team Name:</label>
-                <input type="text" class="form-control" id="newTeamName" name="newTeamName">
-              </div>
-              <div class="form-group">
-                <label for="teamPassword" class="col-form-label">Password:</label>
-                <input type="text" class="form-control" id="teamPassword" name="teamPassword">
-              </div>
-              <div class="modal-footer">
-                <button type="submit" class="btn btn-primary">Save changes</button>
-                <button type="submit" class="btn btn-primary">Delete</button>
+               </div>
+               <div class="form-group">
+                 <input type="hidden" size="20" id="team-name" name="team-name" />
+               </div>
+               <div class="form-group">
+                 <label for="newTeamName" class="col-form-label">Team Name:</label>
+                 <input type="text" class="form-control" id="newTeamName" name="newTeamName">
+               </div>
+               <div class="form-group">
+                 <label for="teamPassword" class="col-form-label">Password:</label>
+                 <input type="text" class="form-control" id="teamPassword" name="teamPassword">
+               </div>
+               <div class="modal-footer">
+                 <button type="submit" class="btn btn-primary">Save changes</button>
+                 <button type="submit" class="btn btn-primary">Delete</button>
               </div>
           </form>
       </div>
@@ -95,12 +95,12 @@
       </div>
       <div class="modal-body">
           <form action="/gamemaker/" method="POST"> {% csrf_token %}
-              <div class="form-group">
-                <input type="hidden" size="20" id="command" name="command" value="maketeam" /><br/>
-              </div>
-              <div class="form-group">
-                <input type="hidden" size="20" id="huntUser" name="huntUser" value="{{ huntUser }}" /><br/>
-              </div>
+               <div class="form-group">
+                 <input type="hidden" size="20" id="command" name="command" value="maketeam" /><br/>
+               </div>
+               <div class="form-group">
+                 <input type="hidden" size="20" id="huntUser" name="huntUser" value="{{ huntUser }}" /><br/>
+               </div>
               <div class="form-group">
                 <label for="team-name" class="col-form-label">Team Name:</label>
                 <input type="text" class="form-control" id="team-name" name="team-name">
@@ -108,9 +108,9 @@
               <div class="form-group">
                 <label for="team-password" class="col-form-label">Password:</label>
                 <input type="text" class="form-control" id="team-password" name="team-password">
-              </div>
-              <div class="modal-footer">
-                <button type="submit" class="btn btn-primary">Save changes</button>
+               </div>
+               <div class="modal-footer">
+                 <button type="submit" class="btn btn-primary">Save changes</button>
               </div>
           </form>
       </div>
@@ -133,16 +133,16 @@
               <div class="form-group">
                 <input type="hidden" size="20" id="command" name="command" value="editlandmark" /><br/>
               </div>
-              <div class="form-group">
-                <input type="hidden" size="20" id="huntUser" name="huntUser" value="{{ huntUser }}" /><br/>
-              </div>
-              <div class="form-group">
-                <input type="hidden" size="20" id="landmark-name" name="landmark-name">
-              </div>
-              <div class="form-group">
-                <label for="new-landmark-name" class="col-form-label">Landmark Name:</label>
-                <input type="text" class="form-control" id="new-landmark-name" name="new-landmark-name">
-              </div>
+               <div class="form-group">
+                 <input type="hidden" size="20" id="huntUser" name="huntUser" value="{{ huntUser }}" /><br/>
+               </div>
+               <div class="form-group">
+                 <input type="hidden" size="20" id="landmark-name" name="landmark-name">
+               </div>
+               <div class="form-group">
+                 <label for="new-landmark-name" class="col-form-label">Landmark Name:</label>
+                 <input type="text" class="form-control" id="new-landmark-name" name="new-landmark-name">
+               </div>
               <div class="form-group">
                 <label for="landmark-clue" class="col-form-label">Clue:</label>
                 <input type="text" class="form-control" id="landmark-clue" name="landmark-clue">
@@ -154,17 +154,17 @@
               <div class="form-group">
                 <label for="landmark-answer" class="col-form-label">Confirmation Answer:</label>
                 <input type="text" class="form-control" id="landmark-answer" name="landmark-answer">
-              </div>
-              <div class="form-group">
-                <label for="landmark-order" class="col-form-label">Order Number:</label>
-                <input type="text" class="form-control" id="landmark-order" name="landmark-order">
-              </div>
-              <div class="form-group">
-                <label for="landmark-points" class="col-form-label">Points:</label>
-                <input type="text" class="form-control" id="landmark-points" name="landmark-points">
-              </div>
-              <div class="modal-footer">
-                <button type="submit" class="btn btn-primary">Save changes</button>
+               </div>
+               <div class="form-group">
+                 <label for="landmark-order" class="col-form-label">Order Number:</label>
+                 <input type="text" class="form-control" id="landmark-order" name="landmark-order">
+               </div>
+               <div class="form-group">
+                 <label for="landmark-points" class="col-form-label">Points:</label>
+                 <input type="text" class="form-control" id="landmark-points" name="landmark-points">
+               </div>
+               <div class="modal-footer">
+                 <button type="submit" class="btn btn-primary">Save changes</button>
               </div>
           </form>
       </div>
@@ -185,26 +185,26 @@
       <div class="modal-body">
           <form action="/gamemaker/" method="POST">{% csrf_token %}
               <div class="form-group">
-                <input type="hidden" size="20" id="command" name="command" value="addlandmark" /><br/>
+                  <input type="hidden" size="20" id="command" name="command" value="addlandmark" /><br/>
               </div>
               <div class="form-group">
-                <input type="hidden" size="20" id="huntUser" name="huntUser" value="{{ huntUser }}" /><br/>
+                  <input type="hidden" size="20" id="huntUser" name="huntUser" value="{{ huntUser }}" /><br/>
               </div>
               <div class="form-group">
-                <label for="landmark-name" class="col-form-label">Landmark Name:</label>
-                <input type="text" class="form-control" id="landmarkName" name="landmarkName">
-              </div>
+                   <label for="landmark-clue" class="col-form-label">Name:</label>
+                   <input type="text" class="form-control" id="landmark-name" name="landmark-name">
+               </div>
               <div class="form-group">
                 <label for="landmark-clue" class="col-form-label">Clue:</label>
-                <input type="text" class="form-control" id="landmarkClue" name="landmarkClue">
+                <input type="text" class="form-control" id="landmark-clue" name="landmark-clue">
               </div>
               <div class="form-group">
                 <label for="landmark-question" class="col-form-label">Confirmation Question:</label>
-                <input type="text" class="form-control" id="landmarkQuestion" name="landmarkQuestion">
+                <input type="text" class="form-control" id="landmark-question" name="landmark-question">
               </div>
               <div class="form-group">
                 <label for="landmark-answer" class="col-form-label">Confirmation Answer:</label>
-                <input type="text" class="form-control" id="landmarkAnswer" name="landmarkAnswer">
+                <input type="text" class="form-control" id="landmark-answer" name="landmark-answer">
               </div>
               <button type="submit" class="btn btn-primary">Submit</button>
           </form>
@@ -215,18 +215,18 @@
     </div>
   </div>
 </div>
-<script>
-$('.team-item').click(function (event) {
- var button = $(this);
- var name = button.find("#team-span").text();
- var modal = $("#editTeam");
-    modal.find('.modal-title').text("Edit: " + name);
-    modal.find("#team-name").attr("value", name);
-});
-$('.landmark-item').click(function (event) {
- var button = $(this);
- var name = button.find("#landmark-span").text();
- var modal = $("#editLandmark");
-    modal.find('.modal-title').text("Edit: " + name);
-    modal.find("#landmark-name").attr("value", name);
-});</script>
+ <script>
+ $('.team-item').click(function (event) {
+  var button = $(this);
+  var name = button.find("#team-span").text();
+  var modal = $("#editTeam");
+     modal.find('.modal-title').text("Edit: " + name);
+     modal.find("#team-name").attr("value", name);
+ });
+ $('.landmark-item').click(function (event) {
+  var button = $(this);
+  var name = button.find("#landmark-span").text();
+  var modal = $("#editLandmark");
+     modal.find('.modal-title').text("Edit: " + name);
+     modal.find("#landmark-name").attr("value", name);
+ });</script>
