@@ -1,1 +1,95 @@
 {% include "Partials/header.html" %}
+
+<nav class="navbar navbar-default" style="height: 8%">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="/">EScavenge</a>
+        </div>
+        <div class="navbar-collapse collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="" data-toggle="modal" data-target="#editTeam">
+                    Edit Password
+                </a>
+                </li>
+                <li><a>{{ huntUser }}</a></li>
+                <li><a href="/">Logout</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+
+<div class="container" style="height: 88%">
+    <div class="row">
+        <div class="jumbotron">
+            <h2 align="center">{{ response }}</h2>
+        </div>
+
+        <div class="col-lg-4">
+            <h3 style="text-align: center; font-size: 40px">Leaderboard</h3>
+            <div class="table">
+                <table class = "table">
+                    {% for team in teams %}
+                        {% if team.name == huntUser.name %}
+                            <tr class ="info"><th style="text-align:center">{{ team.name }}</th>
+                            <td style="text-align:center">{{ team.score }}</td></tr>
+                       {% else %}
+                            <tr><th style="text-align:center">{{ team.name }}</th>
+                            <td style="text-align:center">{{ team.score }}</td></tr>
+                       {% endif %}
+                {% endfor %}
+                </table>
+
+            </div>
+        </div>
+        <div class="col-lg-4" style="height: 100%; text-align: center">
+
+            <h1>Q: {{ question }}</h1>
+            <h2>Hint: {{clue }}</h2>
+            <form action="/team/" method="POST">{% csrf_token %}
+                <input type="hidden" size="1" id="huntUser" name="huntUser" value="{{ huntUser }}"><br/>
+                <input type="hidden" size="1" id="command" name="command" value="answer"><br/>
+                <h2>Answer: <input type="text" id="answer" name="answer"><br></h2>
+                <input type="submit" value="Submit">
+            </form>
+        </div>
+
+        <div class="col-lg-4">
+            <h3 style="text-align: center; font-size: 40px">Stats</h3>
+            <div class="table">
+                <table class = "table">
+                    <tr><th style="text-align:center">Points</th></tr>
+                    <tr><td style="text-align:center">{{ huntUser.score }}</td></tr>
+                    <tr><th style="text-align:center">Penalties</th></tr>
+                    <tr><td style="text-align:center">{{ huntUser.penalties }}</td></tr>
+                    <tr><th style="text-align:center">Guesses</th></tr>
+                    <tr><td style="text-align:center">{{ huntUser.guesses }}</td></tr>
+                </table>
+
+    </div>
+</div>
+
+<div class="modal fade" id="editTeam" tabindex="-1" role="dialog" aria-labelledby="editTeam">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="editTeam" style="text-align: center">Edit Password</h4>
+      </div>
+      <div class="modal-body">
+          <form action="/team/" method="POST">{% csrf_token %}
+              <div class="form-group">
+                <label for="password" class="col-form-label">New Password: </label>
+                <input type="text" class="form-control" id="password" name="password">
+              </div>
+                <input type="hidden" size="1" id="huntUser" name="huntUser" value="{{ huntUser }}"><br/>
+                <input type="hidden" size="1" id="command" name="command" value="editpassword"><br/>
+              <button type="submit" class="btn btn-primary">Submit</button>
+          </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>

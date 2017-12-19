@@ -35,6 +35,7 @@ def index(request):
     return render(request, 'index.html', {"message":""})
 
 def validate(request):
+    i = Interface.Interface()
 
     message = "XXX"
     try:
@@ -45,17 +46,12 @@ def validate(request):
         if u.password != request.POST["password"]:
             message = "Invalid password"
     if message == "XXX":
-        teams = HuntUser.objects.exclude(name="maker")
-        time = Game.objects.get(name="game").time_start
-        time_delta = Game.objects.get(name="game").game_period
-        context = {"huntUser": request.POST["huntUser"],"teams": teams,
-                   "landmarks": Landmark.objects.exclude(name="dummy"),
-                   "time": time, "timeDelta": time_delta,
-                   "running": Game.objects.get(name="game").running}
+        teams = HuntUser.objects.exclude(name="maker").order_by('-score')
+        context = {"huntUser": u,"teams": teams,"landmarks": Landmark.objects.exclude(name="dummy")}
         if u.name == "maker":
             return render(request,"gamemaker.html",context)
         else:
-            return render(request,"team.html",context)
+            return load(request, u, "Welcome!")
     else:
         return render(request,"index.html",{"message":message})
 
@@ -123,4 +119,35 @@ def toggle_game(request):
     return render(request, "gamemaker.html", context)
 
 def team(request):
-    return render(request, "team.html")
+    switch = {
+        "editpassword": lambda request: editpassword(request),
+        "answer": lambda request: answer(request),
+   }
+    return switch[request.POST["command"]](request)
+
+
+def editpassword(request):
+    i = Interface.Interface()
+    u = HuntUser.objects.get(name=request.POST["huntUser"])
+    p = request.POST["password"]
+    command = "editpassword" + " " + p
+    r = i.process(command, u)
+    return load(request, u, r)
+
+def answer(request):
+    i = Interface.Interface()
+    u = HuntUser.objects.get(name=request.POST["huntUser"])
+
+    answer = "answer " + request.POST["answer"]
+    r = i.process(answer, request.POST["huntUser"])
+    return load(request,u,r)
+
+
+def load(request, user, response):
+    i = Interface.Interface()
+    t = HuntUser.objects.exclude(name="maker").order_by('-score')
+    q = i.process("requestquestion", user)
+    c = i.process("requestclue", user)
+
+    context = {"huntUser": user, "teams": t, "question": q, "clue": c, "response": response}
+    return render(request, "team.html", context)
