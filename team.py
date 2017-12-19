@@ -5,29 +5,6 @@ class Team():
     def __init__(self):
         pass
 
-    def display_menu(self):
-        return "Options\n\ndisplaystatus\neditpassword [new password]\nrequestclue\nrequestquestion\nanswer [your guess]\nlogout"
-
-    def display_status(self, teamname):
-        try:
-            team = HuntUser.objects.get(name=teamname)
-        except HuntUser.DoesNotExist:
-            return "Team does not exist"
-        ret = "Team: " + team.name + "\nScore: " + str(team.score) + "\nPenalties: " + str(team.penalties)
-        game = Game.objects.get(name="game")
-        if game.running:
-            if team.game_ended:
-                ret += "\n\nYour team has finished the game\nFinal score: " + str(team.score - team.penalties)
-            elif team.current_landmark.order_num == 0:
-                ret += "\nCurrent landmark: start"
-            else:
-                cur = team.current_landmark.order_num - 1
-                ret += "\nCurrent landmark: " + Landmark.objects.get(order_num=cur).name
-            ret += "\n"
-        else:
-            ret += "\nThere is currently no game running"
-        return ret
-
     def edit_password(self, teamname, input):
         # teamname: string
         # input: List of length 1
@@ -38,30 +15,34 @@ class Team():
             team.save()
             ret = "Password successfully changed to " + password
         except HuntUser.DoesNotExist:
-            ret = "Team does not exist"
+            ret = "Error: See game admin."
+            print("Error! Team does not exist")
         return ret
 
     def answer_question(self, teamname, input):
         # teamname: string
         # input: list of length 1
-        time_check = self.check_time_up()
+        #time_check = self.check_time_up()
         current_time = datetime.now(tz=timezone.utc)
         answer = input[0]
         game = Game.objects.get(name="game")
         if not game.running:
-            if time_check:
-                return "Time is up!"
+            #if time_check:
+             #   return "Time is up!"
             return "There is no game running!"
         try:
             team = HuntUser.objects.get(name=teamname)
         except HuntUser.DoesNotExist:
-            return "Not a valid team!"
+            print("Error. Hunt user doesn't exist")
+            return "Error. Contact admin."
         if team.game_ended:
-            return "You've already finished the game!"
+            return "Game has ended."
         if team.current_landmark.name == "dummy":
-            return "Not at a valid landmark"
+            print("Error: Not valid landmark. Should never be at landmark 'dummy'")
+            return "Error. Contact admin."
         if not team.question_requested:
-            return "You need to receive the question first!"
+            print("Error: inconsistant state")
+            return "Error. Contact admin."
         if answer != team.current_landmark.answer:
             team.guesses += 1
             if team.guesses >= game.num_guesses:
@@ -83,45 +64,45 @@ class Team():
                 if self.check_game_over():
                     game.running = False
                     game.save()
-                return "Congrats! You've reached the end of the game!"
+                return "CONGRATS! YOU'VE WoN!!!!!"
             team.current_landmark = next_landmark
             team.question_requested = False
             team.save()
-            ret_string = "Correct answer given! You can now request the clue for the next landmark"
+            ret_string = "You got it right! Yay!"
         return ret_string
 
     def request_clue(self, teamname):
         # teamname: string
-        time_check = self.check_time_up()
+        #time_check = self.check_time_up()
         game = Game.objects.get(name="game")
         if not game.running:
-            if time_check:
-                return "Time is up!"
+            #if time_check:
+            #    return "Time is up!"
             return "There is no game running!"
         try:
             team = HuntUser.objects.get(name=teamname)
         except HuntUser.DoesNotExist:
             return "Not a valid team!"
         if team.game_ended:
-            return "You've already finished the game!"
+            return " ~~~~~~~ "
         if team.current_landmark.name == "dummy":
             return "Not at a valid landmark"
         return team.current_landmark.clue
 
     def request_question(self, teamname):
         # teamname: string
-        time_check = self.check_time_up()
+        #time_check = self.check_time_up()
         game = Game.objects.get(name="game")
         if not game.running:
-            if time_check:
-                return "Time is up!"
+            #if time_check:
+            #    return "Time is up!"
             return "There is no game running!"
         try:
             team = HuntUser.objects.get(name=teamname)
         except HuntUser.DoesNotExist:
             return "Not a valid team!"
         if team.game_ended:
-            return "You've already finished the game!"
+            return " ~~~~~~~~~ "
         if team.current_landmark.name == "dummy":
             return "Not at a valid landmark"
         if not team.question_requested:
@@ -156,7 +137,7 @@ class Team():
         # Get the current time
         current_time = datetime.now(tz=timezone.utc)
         # Get game time = 1 hour
-        period = timedelta(minutes=game.game_period)
+        period = timedelta(hours=game.game_period)
         game = Game.objects.get(name="game")
         # Check that time hasn't run out
         if (game.time_start + period) <= current_time:
