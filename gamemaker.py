@@ -2,6 +2,7 @@ from Interface.models import HuntUser, Landmark, Penalty, Game
 from django.utils import timezone
 from datetime import datetime
 
+
 class GameMaker:
     def __init__(self):
         pass
@@ -142,6 +143,7 @@ class GameMaker:
                "addlandmark [name], [clue], [question], [answer]\n" \
                "editlandmarks [name], [clue], [question], [answer], [order number], [points]\n" \
                "displaylandmarks\nremovelandmark [name]\n" \
+               "setpenaltyscores [time points], [guess points]\n" \
                "setpenalties [new time penalty], [new guess penalty]\n" \
                "creategame [landmark name]...\nstartgame\nendgame\nlogout\n"
 
@@ -208,6 +210,21 @@ class GameMaker:
             ret_string = "That team does not exist."
         return ret_string
 
+    def set_penalty_scores(self, input):
+        if len(input) != 2:
+            return "Bad input!"
+        try:
+            time_value = int(input[0])
+            guess_value = int(input[1])
+        except ValueError:
+            return "Bad input! Need integers"
+        if time_value > 0 and guess_value > 0:
+            game = Game.objects.get(name="game")
+            game.time_penalty = time_value
+            game.guess_penalty = guess_value
+            game.save()
+        return "Set time penalty to " + input[0] + " and guess penalty to " + input[1]
+
     def set_penalties(self, input):
         # input: List of length 2
         if len(input) == 2:
@@ -216,8 +233,8 @@ class GameMaker:
                 guess = int(input[1])
                 if time > 0 and guess > 0:
                     game = Game.objects.get(name="game")
-                    game.time_penalty = time
-                    game.guess_penalty = guess
+                    game.guess_period = time
+                    game.num_guesses = guess
                     game.save()
                     ret_string = "Time penalty is " + input[0] + " minutes and guess penalty is " + input[1] + " guesses"
                 else:
@@ -288,4 +305,3 @@ class GameMaker:
         game.running = False
         game.save()
         return "Game over"
-
