@@ -94,6 +94,7 @@ def gamemaker(request):
 def toggle_game(request):
     game = Game.objects.get(name="game")
     game.running = not game.running
+    game.time_start = datetime.datetime.now(tz=timezone.utc)
     game.save()
     context = {"huntUser": request.POST["huntUser"], "landmarks": Landmark.objects.exclude(name="dummy"),
                "teams": HuntUser.objects.exclude(name="maker"), "running": game.running}

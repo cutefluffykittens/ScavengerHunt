@@ -193,7 +193,9 @@ class TestMakerDisplayMenu(TestCase):
         self.assertEqual(self.game_maker.display_menu(),
                          "Options\n\ndisplaystatus\nmaketeam [team name], [team password]\n"
                          "editteam [team name to edit], [new team name], [new team password]\n"
-                         "addlandmark [name], [clue], [question], [answer]\ndisplaylandmarks\nremovelandmark [name]\n"
+                         "addlandmark [name], [clue], [question], [answer]\n"
+                         "editlandmarks [name], [clue], [question], [answer], [order number], [points]\n"
+                         "displaylandmarks\nremovelandmark [name]\n"
                          "setpenalties [new time penalty], [new guess penalty]\n"
                          "creategame [landmark name]...\nstartgame\nendgame\nlogout\n", "Wrong menu")
 
@@ -239,14 +241,17 @@ class TestMakerEditTeams(TestCase):
 
     def test_edit_single_team(self):
         self.game_maker.make_team(["team1", "password"])
-        self.assertEquals(self.game_maker.edit_team(["team1", "team2", "passnew"]), "Edited team1 to have username team2 and password passnew", "Bad single team edit")
+        self.assertEquals(self.game_maker.edit_team(["team1", "team2", "passnew"]),
+                          "Edited team1 to have username team2 and password passnew", "Bad single team edit")
 
     def test_edit_multiple_teams(self):
         self.game_maker.make_team(["team1", "password"])
         self.game_maker.make_team(["team2", "password"])
-        self.assertEquals(self.game_maker.edit_team(["team1", "team", "passnew"]), "Edited team1 to have username team and password passnew",
+        self.assertEquals(self.game_maker.edit_team(["team1", "team", "passnew"]),
+                          "Edited team1 to have username team and password passnew",
                           "Bad single team edit")
-        self.assertEquals(self.game_maker.edit_team(["team2", "team3", "passnew"]), "Edited team2 to have username team3 and password passnew",
+        self.assertEquals(self.game_maker.edit_team(["team2", "team3", "passnew"]),
+                          "Edited team2 to have username team3 and password passnew",
                           "Bad single team edit")
 
 

@@ -156,7 +156,7 @@ class Team():
         # Get the current time
         current_time = datetime.now(tz=timezone.utc)
         # Get game time = 1 hour
-        period = timedelta(hours=game.game_period)
+        period = timedelta(minutes=game.game_period)
         game = Game.objects.get(name="game")
         # Check that time hasn't run out
         if (game.time_start + period) <= current_time:
