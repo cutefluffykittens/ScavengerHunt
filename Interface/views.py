@@ -85,31 +85,9 @@ def addlandmark(request):
                "teams":HuntUser.objects.exclude(name="maker")}
     return render(request,"gamemaker.html",context)
 
-def creategame(request):
-    landmarks = request.POST.getlist("landmarkName")
-    command = request.POST["command"]
-    first = True
-    for landmark in landmarks:
-        if landmark:
-            if first:
-                command = command + " " + landmark
-                first = False
-            else:
-                command = command + ", " + landmark
-    print(command)
-    i = Interface.Interface()
-    u = HuntUser.objects.get(name=request.POST["huntUser"])
-    c = HuntCommand(text=command, user=u, timestamp=timezone.now())
-    c.save()
-    i.process(command, request.POST["huntUser"])
-    context = {"huntUser": request.POST["huntUser"], "landmarks": Landmark.objects.exclude(name="dummy"),
-               "teams": HuntUser.objects.exclude(name="maker")}
-    return render(request, "gamemaker.html", context)
-
 def gamemaker(request):
     switch = {
-        "addlandmark": lambda request: addlandmark(request),
-        "creategame": lambda request: creategame(request)
+        "addlandmark": lambda request: addlandmark(request)
     }
     return switch[request.POST["command"]](request)
 
