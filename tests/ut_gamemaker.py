@@ -196,6 +196,7 @@ class TestMakerDisplayMenu(TestCase):
                          "addlandmark [name], [clue], [question], [answer]\n"
                          "editlandmarks [name], [clue], [question], [answer], [order number], [points]\n"
                          "displaylandmarks\nremovelandmark [name]\n"
+                         "setpenaltyscores [time points], [guess points]\n"
                          "setpenalties [new time penalty], [new guess penalty]\n"
                          "creategame [landmark name]...\nstartgame\nendgame\nlogout\n", "Wrong menu")
 
@@ -376,6 +377,33 @@ class TestMakerStartAndEndGame(TestCase):
                          "Error: game should have ended when end_game() was called")
         self.assertFalse(Game.objects.get(name="game").running)
 
+
+class TestPenaltySystem(TestCase):
+    def setUp(self):
+        HuntUser.objects.all().delete()
+        Landmark.objects.all().delete()
+        Game.objects.all().delete()
+        game = Game(name="game",running=False)
+        game.save()
+        lm = Landmark(name="dummy", clue="dummy", question="dummy", answer="dummy", order_num=-1)
+        lm.save()
+        self.maker = gamemaker.GameMaker()
+
+    def test_set_penalty_points(self):
+        self.assertEqual("Set time penalty to 2 and guess penalty to 3", self.maker.set_penalty_scores(["2","3"]),
+                         "Error: penalties not set correctly")
+        game = Game.objects.get(name="game")
+        self.assertEqual(2, game.time_penalty, "Error: time penalty not set correctly")
+        self.assertEqual(3, game.guess_penalty, "Error: guess_penalty not set correctly")
+
+    def test_set_penalty_values(self):
+        self.assertEqual("Time penalty is 2 minutes and guess penalty is 3 guesses", self.maker.set_penalties(["2","3"]),
+                         "Error: penalties not set correctly")
+        game = Game.objects.get(name="game")
+        self.assertEqual(2, game.guess_period, "Error: time penalty not set correctly")
+        self.assertEqual(3, game.num_guesses, "Error: guess_penalty not set correctly")
+
+
 suite = unittest.TestSuite()
 suite.addTest(unittest.makeSuite(TestMakerAddLandmark))
 suite.addTest(unittest.makeSuite(TestMakerEditLandmarks))
@@ -385,9 +413,7 @@ suite.addTest(unittest.makeSuite(TestMakerCheckStatus))
 suite.addTest(unittest.makeSuite(TestMakerDisplayMenu))
 suite.addTest(unittest.makeSuite(TestMakerCreateTeam))
 suite.addTest(unittest.makeSuite(TestMakerEditTeams))
-# suite.addTest(unittest.makeSuite(TestMakerSetPenalties))
-# suite.addTest(unittest.makeSuite(TestStartGame))
-# suite.addTest(unittest.makeSuite(TestMakerEndGame))
+suite.addTest(unittest.makeSuite(TestPenaltySystem))
 suite.addTest(unittest.makeSuite(TestMakerDeleteTeam))
 suite.addTest(unittest.makeSuite(TestMakerCreateGame))
 suite.addTest(unittest.makeSuite(TestMakerStartAndEndGame))
