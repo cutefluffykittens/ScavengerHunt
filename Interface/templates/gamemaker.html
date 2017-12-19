@@ -3,12 +3,6 @@
 <div class="container" id="view">
     <div class="row">
         <div class="col-lg-4">
-            <h1 id="time">
-                {{ time.hour }}:{{ time.minute }}:{{ time.second }}
-            </h1>
-            <h1>
-                {{ timeDelta }}
-            </h1>
             <h3 class="table-header">Leaderboard</h3>
             <div class="list-group">
                 {% for team in teams %}
@@ -26,18 +20,19 @@
                 </a>
             </div>
         </div>
-        <form action="/togglegame/" method="POST">{% csrf_token %}
-            <input type="hidden" size="20" id="huntUser" name="huntUser" value="{{ huntUser }}" /><br/>
-            {% if not running %}
-                <div class="col-lg-4 game-btn-outer">
-                    <button id="start" class="btn btn-success game-btn-inner">Start Game</button>
-                </div>
-            {% else %}
-                <div class="col-lg-4 game-btn-outer">
-                    <button id="start" class="btn btn-danger game-btn-inner">Stop Game</button>
-                </div>
-            {% endif %}
-        </form>
+        <div class="col-lg-4" style="text-align: center;">
+            <a href="" type="button" data-toggle="modal" data-target="#createGame">
+                <button class="btn btn-primary" style="width: 70%; height: 10%; font-size: 25px; margin-top: 30%">Create Game</button>
+            </a>
+            <form action="/togglegame/" method="POST">{% csrf_token %}
+                <input type="hidden" size="20" id="huntUser" name="huntUser" value="{{ huntUser }}" /><br/>
+                {% if not running %}
+                    <button id="start" class="btn btn-success" style="width: 70%; height: 10%; font-size: 25px">Start Game</button>
+                {% else %}
+                    <button id="start" class="btn btn-danger" style="width: 70%; height: 10%; font-size: 25px">Stop Game</button>
+                {% endif %}
+            </form>
+        </div>
         <div class="col-lg-4">
             <h3 class="table-header">Landmarks</h3>
             <div class="list-group">
@@ -174,6 +169,37 @@
                 <label for="landmark-answer" class="col-form-label">Confirmation Answer:</label>
                 <input type="text" class="form-control" id="landmarkAnswer" name="landmarkAnswer">
               </div>
+              <button type="submit" class="btn btn-primary">Submit</button>
+          </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="createGame" tabindex="-1" role="dialog" aria-labelledby="createGameLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title modal-title-center" id="newLandmarkLabel">Create Game</h4>
+      </div>
+      <div class="modal-body">
+          <form action="/gamemaker/" method="POST">{% csrf_token %}
+              <div class="form-group">
+                <input type="hidden" size="20" id="command" name="command" value="creategame" /><br/>
+              </div>
+              <div class="form-group">
+                <input type="hidden" size="20" id="huntUser" name="huntUser" value="{{ huntUser }}" /><br/>
+              </div>
+              {% for landmark in landmarks %}
+                  <div class="form-group">
+                    <label for="landmarkName" class="col-form-label">Landmark:</label>
+                    <input type="text" class="form-control" id="landmarkName" name="landmarkName">
+                  </div>
+              {% endfor %}
               <button type="submit" class="btn btn-primary">Submit</button>
           </form>
       </div>
