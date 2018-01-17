@@ -13,7 +13,11 @@ We were given three sprints (about 6 weeks) to complete our project.
 ## Screenshots
 
 ### Login Screen
+![Login Screen](https://github.com/cutefluffykittens/ScavengerHunt/blob/read-me-edit/screenshots/Screen%20Shot%202018-01-16%20at%206.12.22%20PM.png)
 
 ### Game Maker Interface
+![Login Screen](https://github.com/cutefluffykittens/ScavengerHunt/blob/read-me-edit/screenshots/Screen%20Shot%202018-01-16%20at%206.24.04%20PM.png)
+![Login Screen](https://github.com/cutefluffykittens/ScavengerHunt/blob/read-me-edit/screenshots/Screen%20Shot%202018-01-16%20at%206.12.57%20PM.png)
 
 ### Team Interface
+![Login Screen](https://github.com/cutefluffykittens/ScavengerHunt/blob/read-me-edit/screenshots/Screen%20Shot%202018-01-16%20at%206.24.45%20PM.png)
